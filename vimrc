@@ -26,6 +26,7 @@ Plugin 'tpope/vim-commentary'
 "Beautifier
 Plugin 'maksimr/vim-jsbeautify'
 Plugin 'einars/js-beautify'
+Plugin 'ap/vim-css-color'
 
 Plugin 'MarcWeber/vim-addon-mw-utils'
 Plugin 'tomtom/tlib_vim'
@@ -37,6 +38,10 @@ Plugin 'honza/vim-snippets'
 Plugin 'travitch/hasksyn'
 
 Plugin 'jiangmiao/auto-pairs'
+
+" Plugin 'Lokaltog/vim-easymotion'
+Plugin 'jistr/vim-nerdtree-tabs'
+
 
 "Shortcuts for beautifiers
 autocmd FileType javascript noremap <buffer>  <Leader>f :call JsBeautify()<cr>
@@ -57,7 +62,7 @@ set t_Co=256
 
 " NERDTree
 Plugin 'scrooloose/nerdtree'
-nmap <Leader>] :NERDTreeToggle<CR>
+nmap <Leader>] :NERDTreeTabsToggle<CR>
 let NERDTreeMinimalUI=1
 let NERDTreeDirArrows=0
 let NERDTreeIgnore=['\.pyc$', '\~$']
@@ -78,6 +83,8 @@ Plugin 'ervandew/supertab'
 
 Plugin 'morhetz/gruvbox'
 colorscheme gruvbox
+Plugin 'amdt/vim-niji'
+let g:niji_matching_filetypes = ['lisp', 'ruby', 'python', 'javascript', 'haskell', 'ocaml', 'sml']
 
 call vundle#end()            " required
 filetype plugin indent on    " required
@@ -175,6 +182,7 @@ vmap y ygv<Esc>
 "save and exit shortcut
 nnoremap <Leader>w :w<CR>
 nnoremap <Leader>q :q<CR>
+nnoremap <Leader>q1 :q!<CR>
 nnoremap <Leader>wq :wq<CR>
 
 "select all
@@ -207,8 +215,8 @@ nnoremap <Leader>c k$a,<Esc>
 set pastetoggle=<Leader>i
 
 "j and k movement centers the cursor
-nnoremap J jzz 
-nnoremap K kzz 
+nnoremap J gjzz 
+nnoremap K gkzz 
 
 "Keep selection after indent
 vnoremap > ><CR>gv 
@@ -227,3 +235,41 @@ nmap ; $a;<Esc>
 
 "Repeat last command
 nmap !! :<Up><CR>
+
+"Creating new text objects
+Plugin 'kana/vim-textobj-user'
+call textobj#user#plugin('php', {
+\   'code': {
+\     'pattern': ['<?php\>', '?>'],
+\     'select-a': 'aP',
+\     'select-i': 'iP',
+\   },
+\ })
+call textobj#user#plugin('line', {
+\   '-': {
+\     'select-a-function': 'CurrentLineA',
+\     'select-a': 'al',
+\     'select-i-function': 'CurrentLineI',
+\     'select-i': 'il',
+\   },
+\ })
+
+function! CurrentLineA()
+  normal! 0
+  let head_pos = getpos('.')
+  normal! $
+  let tail_pos = getpos('.')
+  return ['v', head_pos, tail_pos]
+endfunction
+
+function! CurrentLineI()
+  normal! ^
+  let head_pos = getpos('.')
+  normal! g_
+  let tail_pos = getpos('.')
+  let non_blank_char_exists_p = getline('.')[head_pos[2] - 1] !~# '\s'
+  return
+  \ non_blank_char_exists_p
+  \ ? ['v', head_pos, tail_pos]
+  \ : 0
+endfunction
