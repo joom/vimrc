@@ -74,7 +74,10 @@ set t_Co=256
 
 " NERDTree {{{
 Plugin 'scrooloose/nerdtree'
+let g:NERDTreeMapChangeRoot =  "`"
+
 nmap <Leader>] :NERDTreeTabsToggle<CR>
+nnoremap <Space>c :NERDTreeCWD<CR>
 let NERDTreeMinimalUI=1
 let NERDTreeDirArrows=0
 let NERDTreeQuitOnOpen = 1
@@ -111,6 +114,7 @@ autocmd WinEnter * call NERDTreeQuit()
 colorscheme gruvbox
 set nocompatible
 filetype off
+set autochdir
 set foldmethod=marker
 
 set number
@@ -123,7 +127,6 @@ filetype plugin indent on
 set encoding=utf-8
 set fileencodings=utf-8
 
-set autochdir
 set autoindent
 set smartindent
 set cindent
