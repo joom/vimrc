@@ -15,18 +15,20 @@ Plugin 'gmarik/vundle'
 Plugin 'bkad/CamelCaseMotion'
 Plugin 'tpope/vim-fugitive'
 Plugin 'pangloss/vim-javascript'
-Plugin 'Twinside/vim-haskellConceal'
+Plugin 'airblade/vim-gitgutter'
 
 " Railscasts
 " Will be written in build.
 
 Plugin 'terryma/vim-multiple-cursors'
 Plugin 'tpope/vim-commentary'
+Plugin 'vim-scripts/Align'
 
 "Beautifier
 Plugin 'maksimr/vim-jsbeautify'
 Plugin 'einars/js-beautify'
 Plugin 'ap/vim-css-color'
+Plugin 'valloric/MatchTagAlways'
 
 Plugin 'MarcWeber/vim-addon-mw-utils'
 Plugin 'tomtom/tlib_vim'
@@ -35,27 +37,46 @@ Plugin 'garbas/vim-snipmate'
 Plugin 'honza/vim-snippets'
 
 "Haskell
+Plugin 'Twinside/vim-haskellConceal'
 Plugin 'travitch/hasksyn'
+Plugin 'scrooloose/syntastic'
+Plugin 'lukerandall/haskellmode-vim'
+let g:haddock_browser = "open"
+let g:haddock_browser_callformat = "%s %s"
 
 Plugin 'jiangmiao/auto-pairs'
 
 " Plugin 'Lokaltog/vim-easymotion'
 Plugin 'jistr/vim-nerdtree-tabs'
 
+"Split swap
+Plugin 'wesQ3/vim-windowswap'
+let g:windowswap_map_keys = 0 "prevent default bindings
+nnoremap <silent> <Leader>sw :call WindowSwap#EasyWindowSwap()<CR>
+nmap <Leader>` :call WindowSwap#EasyWindowSwap()<CR><Leader>[:call WindowSwap#EasyWindowSwap()<CR>
+"Split resize
+nnoremap <Leader>+ :exe "resize " . (winheight(0) * 3/2)<CR>
+nnoremap <Leader>- :exe "resize " . (winheight(0) * 2/3)<CR>
 
+" EJS templates
+autocmd BufRead,BufNewFile *.ejs set filetype=html
 "Shortcuts for beautifiers
-autocmd FileType javascript noremap <buffer>  <Leader>f :call JsBeautify()<cr>
+autocmd FileType javascript noremap <buffer>  <M-f> :call JsBeautify()<cr>
 " for html
-autocmd FileType html noremap <buffer> <Leader>f :call HtmlBeautify()<cr>
+autocmd FileType html noremap <buffer> <M-f> :call HtmlBeautify()<cr>
 " for css or scss
-autocmd FileType css noremap <buffer> <Leader>f :call CSSBeautify()<cr>
+autocmd FileType css noremap <buffer> <M-f> :call CSSBeautify()<cr>
+" Remove trailing whitespace on save
+autocmd BufWritePre * :%s/\s\+$//e
 
 
+" Airline
+Plugin 'bling/vim-airline'
+let g:airline_theme = 'powerlineish'
+let g:airline_powerline_fonts = 1
 
-"Powerline
-Plugin 'Lokaltog/vim-powerline'
-" Plugin 'Lokaltog/powerline'
-let g:Powerline_symbols = 'compatible'
+" Plugin 'Lokaltog/vim-powerline'
+" let g:Powerline_symbols = 'fancy'
 set laststatus=2
 set t_Co=256
 
@@ -67,6 +88,7 @@ let NERDTreeMinimalUI=1
 let NERDTreeDirArrows=0
 let NERDTreeIgnore=['\.pyc$', '\~$']
 let NERDTreeShowLineNumbers = 1
+let NERDTreeWinSize = 22
 
 " CSScomb
 Plugin 'miripiruni/CSScomb-for-Vim'
@@ -76,7 +98,6 @@ Plugin 'tpope/vim-surround'
 
 " CtrlP (Wow!)
 Plugin 'kien/ctrlp.vim'
-
 
 " SuperTab
 Plugin 'ervandew/supertab'
@@ -154,19 +175,28 @@ endfunction
 autocmd WinEnter * call NERDTreeQuit()
 
 nmap <Tab> :CtrlPBuffer<CR>
-map <C-h> :CtrlPLine<CR>
+nmap <Leader>f :CtrlPLine<CR>
 
 " Shift-tab
 imap <S-Tab> <Esc><<i
 
-" end
+" Mapping external keyboard movement keys
+map <Home> <Esc>ggzz
+map <End> <Esc>Gzz
+map <PageUp> <Esc>10kzz
+map <PageDown> <Esc>10jzz
 
+map <Delete> x
 
 "for unhighlighing the selections
 nmap <Leader>h :let @/=''<CR>
 
 "split switch
 nnoremap <Leader>[ <C-W>w
+map <F1> <C-W><C-H>
+map <F2> <C-W><C-J>
+map <F3> <C-W><C-K>
+map <F4> <C-W><C-L>
 
 "System clipboard
 vmap <Leader>y "+y
@@ -180,47 +210,40 @@ vmap <Leader>P "+P
 vmap y ygv<Esc>
 
 "save and exit shortcut
-nnoremap <Leader>w :w<CR>
-nnoremap <Leader>q :q<CR>
-nnoremap <Leader>q1 :q!<CR>
-nnoremap <Leader>wq :wq<CR>
+nmap <Leader>w :w<CR>
+nmap <Leader>q :q<CR>
+nmap <Leader>wq :wq<CR>
+nmap <Leader>1q :q!<CR>
+map <C-h> <Esc>gT
+map <C-l> <Esc>gt
 
 "select all
-nnoremap <Leader>a ggVG
-"fix nerd tree separation misuse
-nnoremap <Leader>l <Leader>[ && <Leader>q
+nmap <C-a> ggVG
 
 "Fold everything according to syntax shortcut
-nnoremap <F2> :set foldmethod=syntax<CR>
+nmap <F6> :set foldmethod=syntax<CR>
 
 "Edit the vimrc file
-nnoremap <Leader>r :tabnew<CR>:e ~/.vim/vimrc<CR>
+nmap <Leader>r :tabnew<CR>:e ~/.vim/vimrc<CR>
 "Reload vimrc
-nnoremap <F5> :source ~/.vimrc<CR>
+nmap <F5> :source ~/.vimrc<CR>
 
 "New line before/after the current line without going into insert mode
 nmap <F8> o<Esc>
 nmap <F9> O<Esc>
 
-"Select word
-nnoremap <Leader>s vaw
-
 "New Tab
-nnoremap <Leader>n :tabnew<CR>
+nmap <Leader>n :tabnew<CR>
 
 "Add comma at the end of the previous line
-nnoremap <Leader>c k$a,<Esc>
+nmap <Leader>c k$a,<Esc>
 
 "Paste mode toggle
 set pastetoggle=<Leader>i
 
-"j and k movement centers the cursor
-nnoremap J gjzz 
-nnoremap K gkzz 
-
 "Keep selection after indent
-vnoremap > ><CR>gv 
-vnoremap < <<CR>gv 
+vnoremap > ><CR>gv
+vnoremap < <<CR>gv
 
 " "Camel case motion (with shift)
 map <S-W> <Plug>CamelCaseMotion_w
@@ -272,4 +295,9 @@ function! CurrentLineI()
   \ non_blank_char_exists_p
   \ ? ['v', head_pos, tail_pos]
   \ : 0
+endfunction
+
+function! TabSpace2()
+  %s/\t/  /g
+  return
 endfunction
