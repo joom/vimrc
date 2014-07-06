@@ -203,7 +203,7 @@ map <PageDown> <Esc>10jzz
 map <Delete> x
 
 "for unhighlighing the selections
-nmap <C-z> :let @/=''<CR>
+nmap <C-x> :let @/=''<CR>
 
 "split switch
 nnoremap <Leader>[ <C-W>w
