@@ -1,48 +1,33 @@
-set nocompatible
-filetype off
-
-set number
-" set relativenumber
-
-syntax on
-set mouse=a
+" Vundle {{{
 
 set rtp+=~/.vim/bundle/Vundle.vim
 call vundle#begin()
-
 Plugin 'gmarik/vundle'
+
+nmap <Leader>op :PluginInstall<CR>
 
 Plugin 'bkad/CamelCaseMotion'
 Plugin 'tpope/vim-fugitive'
 Plugin 'pangloss/vim-javascript'
 Plugin 'airblade/vim-gitgutter'
-
-" Railscasts
-" Will be written in build.
-
 Plugin 'terryma/vim-multiple-cursors'
 Plugin 'tpope/vim-commentary'
 Plugin 'vim-scripts/Align'
-
-"Beautifier
 Plugin 'maksimr/vim-jsbeautify'
 Plugin 'einars/js-beautify'
 Plugin 'ap/vim-css-color'
 Plugin 'valloric/MatchTagAlways'
-
 Plugin 'MarcWeber/vim-addon-mw-utils'
 Plugin 'tomtom/tlib_vim'
 Plugin 'garbas/vim-snipmate'
-
 Plugin 'honza/vim-snippets'
+Plugin 'vim-scripts/Gundo'
 
 "Haskell
 Plugin 'Twinside/vim-haskellConceal'
 Plugin 'travitch/hasksyn'
 Plugin 'scrooloose/syntastic'
 Plugin 'lukerandall/haskellmode-vim'
-let g:haddock_browser = "open"
-let g:haddock_browser_callformat = "%s %s"
 
 Plugin 'jiangmiao/auto-pairs'
 
@@ -51,44 +36,6 @@ Plugin 'jistr/vim-nerdtree-tabs'
 
 "Split swap
 Plugin 'wesQ3/vim-windowswap'
-let g:windowswap_map_keys = 0 "prevent default bindings
-nnoremap <silent> <Leader>sw :call WindowSwap#EasyWindowSwap()<CR>
-nmap <Leader>` :call WindowSwap#EasyWindowSwap()<CR><Leader>[:call WindowSwap#EasyWindowSwap()<CR>
-"Split resize
-nnoremap <Leader>+ :exe "resize " . (winheight(0) * 3/2)<CR>
-nnoremap <Leader>- :exe "resize " . (winheight(0) * 2/3)<CR>
-
-" EJS templates
-autocmd BufRead,BufNewFile *.ejs set filetype=html
-"Shortcuts for beautifiers
-autocmd FileType javascript noremap <buffer>  <M-f> :call JsBeautify()<cr>
-" for html
-autocmd FileType html noremap <buffer> <M-f> :call HtmlBeautify()<cr>
-" for css or scss
-autocmd FileType css noremap <buffer> <M-f> :call CSSBeautify()<cr>
-" Remove trailing whitespace on save
-autocmd BufWritePre * :%s/\s\+$//e
-
-
-" Airline
-Plugin 'bling/vim-airline'
-let g:airline_theme = 'powerlineish'
-let g:airline_powerline_fonts = 1
-
-" Plugin 'Lokaltog/vim-powerline'
-" let g:Powerline_symbols = 'fancy'
-set laststatus=2
-set t_Co=256
-
-
-" NERDTree
-Plugin 'scrooloose/nerdtree'
-nmap <Leader>] :NERDTreeTabsToggle<CR>
-let NERDTreeMinimalUI=1
-let NERDTreeDirArrows=0
-let NERDTreeIgnore=['\.pyc$', '\~$']
-let NERDTreeShowLineNumbers = 1
-let NERDTreeWinSize = 22
 
 " CSScomb
 Plugin 'miripiruni/CSScomb-for-Vim'
@@ -102,13 +49,74 @@ Plugin 'kien/ctrlp.vim'
 " SuperTab
 Plugin 'ervandew/supertab'
 
-Plugin 'morhetz/gruvbox'
-colorscheme gruvbox
+Plugin 'vim-scripts/wombat256.vim'
 Plugin 'amdt/vim-niji'
-let g:niji_matching_filetypes = ['lisp', 'ruby', 'python', 'javascript', 'haskell', 'ocaml', 'sml']
-
 call vundle#end()            " required
-filetype plugin indent on    " required
+" }}}
+
+" Plugin Settings {{{
+let g:niji_matching_filetypes = ['lisp', 'ruby', 'python', 'javascript', 'haskell', 'ocaml', 'sml']
+let g:haddock_browser = "open"
+let g:haddock_browser_callformat = "%s %s"
+let g:windowswap_map_keys = 0 "prevent default bindings
+" }}}
+
+" Airline {{{
+Plugin 'bling/vim-airline'
+let g:airline_theme = 'powerlineish'
+let g:airline_powerline_fonts = 1
+
+" Plugin 'Lokaltog/vim-powerline'
+" let g:Powerline_symbols = 'fancy'
+set laststatus=2
+set t_Co=256
+" }}}
+
+" NERDTree {{{
+Plugin 'scrooloose/nerdtree'
+nmap <Leader>] :NERDTreeTabsToggle<CR>
+let NERDTreeMinimalUI=1
+let NERDTreeDirArrows=0
+let NERDTreeQuitOnOpen = 1
+let NERDTreeIgnore=['\.pyc$', '\~$']
+let NERDTreeShowLineNumbers = 1
+let NERDTreeWinSize = 25
+
+function! NERDTreeQuit()
+  redir => buffersoutput
+  silent buffers
+  redir END
+"                     1BufNo  2Mods.     3File           4LineNo
+  let pattern = '^\s*\(\d\+\)\(.....\) "\(.*\)"\s\+line \(\d\+\)$'
+  let windowfound = 0
+
+  for bline in split(buffersoutput, "\n")
+    let m = matchlist(bline, pattern)
+
+    if (len(m) > 0)
+      if (m[2] =~ '..a..')
+        let windowfound = 1
+      endif
+    endif
+  endfor
+
+  if (!windowfound)
+    quitall
+  endif
+endfunction
+autocmd WinEnter * call NERDTreeQuit()
+" }}}
+
+" General {{{
+colorscheme gruvbox
+set nocompatible
+filetype off
+set foldmethod=marker
+
+set number
+
+syntax on
+set mouse=a
 
 filetype plugin indent on
 
@@ -149,31 +157,34 @@ autocmd FileType xml set omnifunc=xmlcomplete#CompleteTags
 autocmd FileType php set omnifunc=phpcomplete#CompletePHP
 autocmd FileType c set omnifunc=ccomplete#Complete
 autocmd VimEnter * wincmd w
+" EJS templates
+autocmd BufRead,BufNewFile *.ejs set filetype=html
+"Shortcuts for beautifiers
+autocmd FileType javascript noremap <buffer>  <M-f> :call JsBeautify()<cr>
+" for html
+autocmd FileType html noremap <buffer> <M-f> :call HtmlBeautify()<cr>
+" for css or scss
+autocmd FileType css noremap <buffer> <M-f> :call CSSBeautify()<cr>
+" Remove trailing whitespace on save
+autocmd BufWritePre * :%s/\s\+$//e
 
-function! NERDTreeQuit()
-  redir => buffersoutput
-  silent buffers
-  redir END
-"                     1BufNo  2Mods.     3File           4LineNo
-  let pattern = '^\s*\(\d\+\)\(.....\) "\(.*\)"\s\+line \(\d\+\)$'
-  let windowfound = 0
 
-  for bline in split(buffersoutput, "\n")
-    let m = matchlist(bline, pattern)
-
-    if (len(m) > 0)
-      if (m[2] =~ '..a..')
-        let windowfound = 1
-      endif
-    endif
-  endfor
-
-  if (!windowfound)
-    quitall
-  endif
+function! TabSpace2()
+  %s/\t/  /g
+  return
 endfunction
-autocmd WinEnter * call NERDTreeQuit()
+" }}}
 
+" Some Useful Key Mappings {{{
+nmap <silent> <leader>u :GundoToggle<CR>
+nnoremap <silent> <Leader>sw :call WindowSwap#EasyWindowSwap()<CR>
+nmap <Leader>` :call WindowSwap#EasyWindowSwap()<CR><Leader>[:call WindowSwap#EasyWindowSwap()<CR>
+
+"Split resize
+nmap <Leader>9 :resize -10<CR>
+nmap <Leader>0 :resize +10<CR>
+nmap <Leader>- :vertical resize -5<CR>
+nmap <Leader>= :vertical resize +5<CR>
 nmap <Tab> :CtrlPBuffer<CR>
 nmap <Leader>f :CtrlPLine<CR>
 
@@ -189,7 +200,7 @@ map <PageDown> <Esc>10jzz
 map <Delete> x
 
 "for unhighlighing the selections
-nmap <Leader>h :let @/=''<CR>
+nmap <C-z> :let @/=''<CR>
 
 "split switch
 nnoremap <Leader>[ <C-W>w
@@ -219,9 +230,6 @@ map <C-l> <Esc>gt
 
 "select all
 nmap <C-a> ggVG
-
-"Fold everything according to syntax shortcut
-nmap <F6> :set foldmethod=syntax<CR>
 
 "Edit the vimrc file
 nmap <Leader>r :tabnew<CR>:e ~/.vim/vimrc<CR>
@@ -258,8 +266,9 @@ nmap ; $a;<Esc>
 
 "Repeat last command
 nmap !! :<Up><CR>
+" }}}
 
-"Creating new text objects
+"Creating new text objects {{{
 Plugin 'kana/vim-textobj-user'
 call textobj#user#plugin('php', {
 \   'code': {
@@ -296,8 +305,4 @@ function! CurrentLineI()
   \ ? ['v', head_pos, tail_pos]
   \ : 0
 endfunction
-
-function! TabSpace2()
-  %s/\t/  /g
-  return
-endfunction
+" }}}
