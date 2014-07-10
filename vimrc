@@ -15,6 +15,7 @@ Plugin 'tpope/vim-commentary'
 Plugin 'vim-scripts/Align'
 Plugin 'maksimr/vim-jsbeautify'
 Plugin 'einars/js-beautify'
+Plugin 'kchmck/vim-coffee-script'
 Plugin 'ap/vim-css-color'
 Plugin 'valloric/MatchTagAlways'
 Plugin 'MarcWeber/vim-addon-mw-utils'
@@ -308,4 +309,31 @@ function! CurrentLineI()
   \ ? ['v', head_pos, tail_pos]
   \ : 0
 endfunction
+" }}}
+
+" Tab Move {{{
+
+" Move current tab into the specified direction.
+"
+" @param direction -1 for left, 1 for right.
+function! TabMove(direction)
+    " get number of tab pages.
+    let ntp=tabpagenr("$")
+    " move tab, if necessary.
+    if ntp > 1
+        " get number of current tab page.
+        let ctpn=tabpagenr()
+        " move left.
+        if a:direction < 0
+            let index=((ctpn-1+ntp-1)%ntp)
+        else
+            let index=(ctpn%ntp)
+        endif
+
+        " move tab page.
+        execute "tabmove ".index
+    endif
+endfunction
+nmap <Space>h :call TabMove(-1)<CR>
+nmap <Space>l :call TabMove(1)<CR>
 " }}}
