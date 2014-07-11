@@ -19,7 +19,7 @@ Plugin 'garbas/vim-snipmate'
 Plugin 'honza/vim-snippets'
 Plugin 'vim-scripts/Gundo'
 Plugin 'jiangmiao/auto-pairs'
-" Plugin 'Lokaltog/vim-easymotion'
+Plugin 'Lokaltog/vim-easymotion'
 Plugin 'jistr/vim-nerdtree-tabs'
 Plugin 'wesQ3/vim-windowswap'
 Plugin 'tpope/vim-surround'
@@ -27,6 +27,7 @@ Plugin 'kien/ctrlp.vim'
 Plugin 'ervandew/supertab'
 Plugin 'vim-scripts/wombat256.vim'
 Plugin 'amdt/vim-niji'
+Plugin 'ConradIrwin/vim-bracketed-paste'
 
 "Front End
 Plugin 'pangloss/vim-javascript'
@@ -49,6 +50,7 @@ let g:niji_matching_filetypes = ['lisp', 'ruby', 'python', 'javascript', 'haskel
 let g:haddock_browser = "open"
 let g:haddock_browser_callformat = "%s %s"
 let g:windowswap_map_keys = 0 "prevent default bindings
+let g:ctrlp_custom_ignore = 'node_modules\|DS_Store\|git'
 " }}}
 
 " Airline {{{
@@ -101,11 +103,16 @@ autocmd WinEnter * call NERDTreeQuit()
 " }}}
 
 " General {{{
+nnoremap j gj
+nnoremap k gk
+vnoremap j gj
+vnoremap k gk
 colorscheme gruvbox
 set nocompatible
 filetype off
 set autochdir
 set foldmethod=marker
+set linebreak
 
 set number
 
@@ -240,7 +247,7 @@ nmap <Leader>n :tabnew<CR>
 nmap <Leader>c k$a,<Esc>
 
 "Paste mode toggle
-set pastetoggle=<Leader>i
+set pastetoggle=<F5><F5>
 
 "Keep selection after indent
 vnoremap > ><CR>gv
