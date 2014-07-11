@@ -8,50 +8,39 @@ nmap <Leader>op :PluginInstall<CR>
 
 Plugin 'bkad/CamelCaseMotion'
 Plugin 'tpope/vim-fugitive'
-Plugin 'pangloss/vim-javascript'
 Plugin 'airblade/vim-gitgutter'
 Plugin 'terryma/vim-multiple-cursors'
 Plugin 'tpope/vim-commentary'
 Plugin 'vim-scripts/Align'
-Plugin 'maksimr/vim-jsbeautify'
-Plugin 'einars/js-beautify'
-Plugin 'kchmck/vim-coffee-script'
-Plugin 'ap/vim-css-color'
 Plugin 'valloric/MatchTagAlways'
 Plugin 'MarcWeber/vim-addon-mw-utils'
 Plugin 'tomtom/tlib_vim'
 Plugin 'garbas/vim-snipmate'
 Plugin 'honza/vim-snippets'
 Plugin 'vim-scripts/Gundo'
+Plugin 'jiangmiao/auto-pairs'
+" Plugin 'Lokaltog/vim-easymotion'
+Plugin 'jistr/vim-nerdtree-tabs'
+Plugin 'wesQ3/vim-windowswap'
+Plugin 'tpope/vim-surround'
+Plugin 'kien/ctrlp.vim'
+Plugin 'ervandew/supertab'
+Plugin 'vim-scripts/wombat256.vim'
+Plugin 'amdt/vim-niji'
+
+"Front End
+Plugin 'pangloss/vim-javascript'
+Plugin 'maksimr/vim-jsbeautify'
+Plugin 'einars/js-beautify'
+Plugin 'kchmck/vim-coffee-script'
+Plugin 'ap/vim-css-color'
+Plugin 'miripiruni/CSScomb-for-Vim'
 
 "Haskell
 Plugin 'Twinside/vim-haskellConceal'
 Plugin 'travitch/hasksyn'
 Plugin 'scrooloose/syntastic'
 Plugin 'lukerandall/haskellmode-vim'
-
-Plugin 'jiangmiao/auto-pairs'
-
-" Plugin 'Lokaltog/vim-easymotion'
-Plugin 'jistr/vim-nerdtree-tabs'
-
-"Split swap
-Plugin 'wesQ3/vim-windowswap'
-
-" CSScomb
-Plugin 'miripiruni/CSScomb-for-Vim'
-
-" Surround
-Plugin 'tpope/vim-surround'
-
-" CtrlP (Wow!)
-Plugin 'kien/ctrlp.vim'
-
-" SuperTab
-Plugin 'ervandew/supertab'
-
-Plugin 'vim-scripts/wombat256.vim'
-Plugin 'amdt/vim-niji'
 call vundle#end()            " required
 " }}}
 
