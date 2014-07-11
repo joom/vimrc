@@ -164,11 +164,11 @@ autocmd VimEnter * wincmd w
 " EJS templates
 autocmd BufRead,BufNewFile *.ejs set filetype=html
 "Shortcuts for beautifiers
-autocmd FileType javascript noremap <buffer>  <M-f> :call JsBeautify()<cr>
+autocmd FileType javascript noremap <buffer>  <Space>f :call JsBeautify()<cr>
 " for html
-autocmd FileType html noremap <buffer> <M-f> :call HtmlBeautify()<cr>
+autocmd FileType html noremap <buffer> <Space>f :call HtmlBeautify()<cr>
 " for css or scss
-autocmd FileType css noremap <buffer> <M-f> :call CSSBeautify()<cr>
+autocmd FileType css noremap <buffer> <Space>f :call CSSBeautify()<cr>
 " Remove trailing whitespace on save
 autocmd BufWritePre * :%s/\s\+$//e
 
@@ -204,7 +204,7 @@ map <PageDown> <Esc>10jzz
 map <Delete> x
 
 "for unhighlighing the selections
-nmap <C-x> :let @/=''<CR>
+nmap <Space>x :let @/=''<CR>
 
 "split switch
 nnoremap <Leader>[ <C-W>w
@@ -311,7 +311,7 @@ function! CurrentLineI()
 endfunction
 " }}}
 
-" Tab Move {{{
+" Tab Move and Rename {{{
 
 " Move current tab into the specified direction.
 "
@@ -336,4 +336,21 @@ function! TabMove(direction)
 endfunction
 nmap <Space>h :call TabMove(-1)<CR>
 nmap <Space>l :call TabMove(1)<CR>
+
+function! TRename()
+  let name = input('Enter tab name: ')
+  TName(name)
+endfunction
+
+nmap <Space>r :call TRename()<CR>
+" }}}
+
+" Turkish Deasciifier {{{
+function! Turkish_Deasciify()
+    normal gv"xy
+    let @x = system('echo "' . @x . '" | ~/Library/turkish-deasciifier/turkish-deasciify')
+    let @x = join(split(@x, "\n"), "\n")
+    normal gv"xp
+endfunction
+vmap <Space>tr :call Turkish_Deasciify()<CR>
 " }}}
