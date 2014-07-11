@@ -25,7 +25,6 @@ Plugin 'wesQ3/vim-windowswap'
 Plugin 'tpope/vim-surround'
 Plugin 'kien/ctrlp.vim'
 Plugin 'ervandew/supertab'
-Plugin 'vim-scripts/wombat256.vim'
 Plugin 'amdt/vim-niji'
 Plugin 'ConradIrwin/vim-bracketed-paste'
 
@@ -42,6 +41,9 @@ Plugin 'Twinside/vim-haskellConceal'
 Plugin 'travitch/hasksyn'
 Plugin 'scrooloose/syntastic'
 Plugin 'lukerandall/haskellmode-vim'
+
+"Color Schemes
+Plugin 'vim-scripts/wombat256.vim'
 call vundle#end()            " required
 " }}}
 
@@ -179,6 +181,10 @@ endfunction
 nmap <silent> <leader>u :GundoToggle<CR>
 nnoremap <silent> <Leader>sw :call WindowSwap#EasyWindowSwap()<CR>
 nmap <Leader>` :call WindowSwap#EasyWindowSwap()<CR><Leader>[:call WindowSwap#EasyWindowSwap()<CR>
+nmap <Space>g :Gstatus<CR>
+
+" emacs-follow-mode functionality
+nmap <silent> <Leader>ef :vsplit<bar>wincmd l<bar>exe "norm! Ljz<c-v><cr>"<cr>:set scb<cr>:wincmd h<cr>:set scb<cr>
 
 "Split resize
 nmap <Leader>9 :resize -10<CR>
@@ -343,10 +349,19 @@ nmap <Space>r :call TRename()<CR>
 
 " Turkish Deasciifier {{{
 function! Turkish_Deasciify()
-    normal gv"xy
+    normal! gv"xy
     let @x = system('echo "' . @x . '" | ~/Library/turkish-deasciifier/turkish-deasciify')
     let @x = join(split(@x, "\n"), "\n")
-    normal gv"xp
+    normal! gv"xp
 endfunction
+
+function! Turkish_Asciify()
+    let s:turkish_ascii = [['ğ','g'],['Ğ','G'],['ç','c'],['Ç','C'],['ş','s'],['Ş','S'],['ü','u'],['Ü','U'],['ö','o'],['Ö','O'],['ı','i'],['İ','I'],['â','a'],['Â','A'],['û','u'],['Û','U'],['î','i'],['Î','I']]
+    for pair in s:turkish_ascii
+      execute "'<,'>s/" . pair[0] . "/" . pair[1]. "/ge"
+    endfor
+endfunction
+
 vmap <Space>tr :call Turkish_Deasciify()<CR>
+vmap <Space>rt :call Turkish_Asciify()<CR>
 " }}}
