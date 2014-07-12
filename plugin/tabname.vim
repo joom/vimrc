@@ -68,7 +68,7 @@ function! TabCaptionLineFunction()
 
         " joom edit
         let caption = ' '.(i+1).modified_part.')'
-        let line .= '%#String#'.caption
+        " let line .= '%#String#' . caption
         " select the highlighting
         if i + 1 == tabpagenr()
             let line .= '%#TabLineSel#'
@@ -81,8 +81,7 @@ function! TabCaptionLineFunction()
         endif
 
         let line .= '%' . (i + 1) . 'T'
-
-        let line .= TabCaptionLabel(i + 1)
+        let line .= caption . TabCaptionLabel(i + 1)
     endfor
 
     let line .= '%#TabLineFill#%T'

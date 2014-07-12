@@ -6,6 +6,7 @@ Plugin 'gmarik/vundle'
 
 nmap <Leader>op :PluginInstall<CR>
 
+Plugin 'joom/turkish-deasciifier.vim'
 Plugin 'bkad/CamelCaseMotion'
 Plugin 'tpope/vim-fugitive'
 Plugin 'airblade/vim-gitgutter'
@@ -27,6 +28,7 @@ Plugin 'kien/ctrlp.vim'
 Plugin 'ervandew/supertab'
 Plugin 'amdt/vim-niji'
 Plugin 'ConradIrwin/vim-bracketed-paste'
+Plugin 'gcmt/wildfire.vim'
 
 "Front End
 Plugin 'pangloss/vim-javascript'
@@ -37,10 +39,12 @@ Plugin 'ap/vim-css-color'
 Plugin 'miripiruni/CSScomb-for-Vim'
 
 "Haskell
+Plugin 'Shougo/vimproc.vim'
 Plugin 'Twinside/vim-haskellConceal'
 Plugin 'travitch/hasksyn'
 Plugin 'scrooloose/syntastic'
 Plugin 'lukerandall/haskellmode-vim'
+Plugin 'eagletmt/ghcmod-vim'
 
 "Color Schemes
 Plugin 'vim-scripts/wombat256.vim'
@@ -53,6 +57,10 @@ let g:haddock_browser = "open"
 let g:haddock_browser_callformat = "%s %s"
 let g:windowswap_map_keys = 0 "prevent default bindings
 let g:ctrlp_custom_ignore = 'node_modules\|DS_Store\|git'
+
+let g:turkish_deasciifier_path = '~/Library/turkish-deasciifier/turkish-deasciify'
+vmap <Space>tr :<c-u>call Turkish_Deasciify()<CR>
+vmap <Space>rt :<c-u>call Turkish_Asciify()<CR>
 " }}}
 
 " Airline {{{
@@ -179,20 +187,29 @@ endfunction
 
 " Some Useful Key Mappings {{{
 nmap <silent> <leader>u :GundoToggle<CR>
-nnoremap <silent> <Leader>sw :call WindowSwap#EasyWindowSwap()<CR>
-nmap <Leader>` :call WindowSwap#EasyWindowSwap()<CR><Leader>[:call WindowSwap#EasyWindowSwap()<CR>
+
+"Git status (vim-fugitive)
 nmap <Space>g :Gstatus<CR>
+
+"Deletes unused buffers
+nmap <Space>w :Wipeout<CR>
+
+"ghc-mod
+vmap <Space>ty :<c-u>GhcModType<CR>
+nmap <Space>yt :GhcModTypeClear<CR>
 
 " emacs-follow-mode functionality
 nmap <silent> <Leader>ef :vsplit<bar>wincmd l<bar>exe "norm! Ljz<c-v><cr>"<cr>:set scb<cr>:wincmd h<cr>:set scb<cr>
 
-"Split resize
+"Split resize and swap
 nmap <Leader>9 :resize -10<CR>
 nmap <Leader>0 :resize +10<CR>
 nmap <Leader>- :vertical resize -5<CR>
 nmap <Leader>= :vertical resize +5<CR>
 nmap <Tab> :CtrlPBuffer<CR>
 nmap <Leader>f :CtrlPLine<CR>
+nnoremap <silent> <Leader>sw :call WindowSwap#EasyWindowSwap()<CR>
+nmap <Leader>` :call WindowSwap#EasyWindowSwap()<CR><Leader>[:call WindowSwap#EasyWindowSwap()<CR>
 
 " Shift-tab
 imap <S-Tab> <Esc><<i
@@ -345,23 +362,4 @@ function! TRename()
 endfunction
 
 nmap <Space>r :call TRename()<CR>
-" }}}
-
-" Turkish Deasciifier {{{
-function! Turkish_Deasciify()
-    normal! gv"xy
-    let @x = system('echo "' . @x . '" | ~/Library/turkish-deasciifier/turkish-deasciify')
-    let @x = join(split(@x, "\n"), "\n")
-    normal! gv"xp
-endfunction
-
-function! Turkish_Asciify()
-    let s:turkish_ascii = [['ğ','g'],['Ğ','G'],['ç','c'],['Ç','C'],['ş','s'],['Ş','S'],['ü','u'],['Ü','U'],['ö','o'],['Ö','O'],['ı','i'],['İ','I'],['â','a'],['Â','A'],['û','u'],['Û','U'],['î','i'],['Î','I']]
-    for pair in s:turkish_ascii
-      execute "'<,'>s/" . pair[0] . "/" . pair[1]. "/ge"
-    endfor
-endfunction
-
-vmap <Space>tr :call Turkish_Deasciify()<CR>
-vmap <Space>rt :call Turkish_Asciify()<CR>
 " }}}
