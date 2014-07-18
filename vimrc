@@ -29,6 +29,8 @@ Plugin 'ervandew/supertab'
 Plugin 'amdt/vim-niji'
 Plugin 'ConradIrwin/vim-bracketed-paste'
 Plugin 'gcmt/wildfire.vim'
+Plugin 'Yggdroot/indentLine'
+Plugin 'derekwyatt/vim-scala'
 
 "Front End
 Plugin 'pangloss/vim-javascript'
@@ -47,11 +49,16 @@ Plugin 'lukerandall/haskellmode-vim'
 Plugin 'eagletmt/ghcmod-vim'
 
 "Color Schemes
+Plugin 'altercation/vim-colors-solarized'
 Plugin 'vim-scripts/wombat256.vim'
+Plugin 'larssmit/vim-getafe'
+
+Plugin 'Shougo/vimshell.vim'
 call vundle#end()            " required
 " }}}
 
 " Plugin Settings {{{
+let g:solarized_termcolors=256
 let g:niji_matching_filetypes = ['lisp', 'ruby', 'python', 'javascript', 'haskell', 'ocaml', 'sml']
 let g:haddock_browser = "open"
 let g:haddock_browser_callformat = "%s %s"
@@ -120,7 +127,7 @@ vnoremap k gk
 colorscheme gruvbox
 set nocompatible
 filetype off
-set autochdir
+" set autochdir
 set foldmethod=marker
 set linebreak
 
@@ -186,8 +193,15 @@ endfunction
 " }}}
 
 " Some Useful Key Mappings {{{
+
+"Word swap
+nmap <Space>sw dawelp
+nmap <Space>ws dawbP
+
 nmap <silent> <leader>u :GundoToggle<CR>
 
+"Vim Shell
+nmap <Space>s :VimShell<CR>
 "Git status (vim-fugitive)
 nmap <Space>g :Gstatus<CR>
 
@@ -260,8 +274,8 @@ nmap <Leader>r :tabnew<CR>:e ~/.vim/vimrc<CR>
 nmap <F5> :source ~/.vimrc<CR>
 
 "New line before/after the current line without going into insert mode
-nmap <F8> o<Esc>
-nmap <F9> O<Esc>
+nnoremap <silent><F8> :set paste<CR>m`o<Esc>``:set nopaste<CR>
+nnoremap <silent><F9> :set paste<CR>m`O<Esc>``:set nopaste<CR>
 
 "New Tab
 nmap <Leader>n :tabnew<CR>
@@ -362,4 +376,13 @@ function! TRename()
 endfunction
 
 nmap <Space>r :call TRename()<CR>
+" }}}
+
+" Nice Vimgrep {{{
+function! NiceVimGrep()
+  let lookfor = input('vimgrep /')
+  execute "vimgrep /" . lookfor . "/j **"
+  cw
+endfunction
+nmap <Space>gr :call NiceVimGrep()<CR>
 " }}}
