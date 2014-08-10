@@ -31,6 +31,7 @@ Plugin 'ConradIrwin/vim-bracketed-paste'
 Plugin 'gcmt/wildfire.vim'
 Plugin 'Yggdroot/indentLine'
 Plugin 'derekwyatt/vim-scala'
+Plugin 'toyamarinyon/vim-swift'
 
 "Front End
 Plugin 'pangloss/vim-javascript'
@@ -42,7 +43,7 @@ Plugin 'miripiruni/CSScomb-for-Vim'
 
 "Haskell
 Plugin 'Shougo/vimproc.vim'
-Plugin 'Twinside/vim-haskellConceal'
+" Plugin 'Twinside/vim-haskellConceal'
 Plugin 'travitch/hasksyn'
 Plugin 'scrooloose/syntastic'
 Plugin 'lukerandall/haskellmode-vim'
@@ -229,8 +230,8 @@ nmap <Leader>` :call WindowSwap#EasyWindowSwap()<CR><Leader>[:call WindowSwap#Ea
 imap <S-Tab> <Esc><<i
 
 " Mapping external keyboard movement keys
-map <Home> <Esc>ggzz
-map <End> <Esc>Gzz
+map <Home> gg
+map <End> Gzz
 map <PageUp> <Esc>10kzz
 map <PageDown> <Esc>10jzz
 
@@ -262,11 +263,12 @@ nmap <Leader>w :w<CR>
 nmap <Leader>q :q<CR>
 nmap <Leader>wq :wq<CR>
 nmap <Leader>1q :q!<CR>
-map <C-h> <Esc>gT
-map <C-l> <Esc>gt
+map <Space>h <Esc>gT
+map <Space>l <Esc>gt
+nmap tg gT
 
 "select all
-nmap <C-a> ggVG
+nmap <Space>a ggVG
 
 "Edit the vimrc file
 nmap <Leader>r :tabnew<CR>:e ~/.vim/vimrc<CR>
@@ -299,7 +301,7 @@ map <S-E> <Plug>CamelCaseMotion_e
 nmap gc Vgc<Esc>
 
 "Add semicolon at the end of line
-nmap ; $a;<Esc>
+nmap <Space>; $a;<Esc>
 
 "Repeat last command
 nmap !! :<Up><CR>
@@ -367,8 +369,8 @@ function! TabMove(direction)
         execute "tabmove ".index
     endif
 endfunction
-nmap <Space>h :call TabMove(-1)<CR>
-nmap <Space>l :call TabMove(1)<CR>
+nmap <C-h> :call TabMove(-1)<CR>
+nmap <C-l> :call TabMove(1)<CR>
 
 function! TRename()
   let name = input('Enter tab name: ')
