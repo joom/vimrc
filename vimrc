@@ -49,22 +49,27 @@ Plugin 'scrooloose/syntastic'
 Plugin 'lukerandall/haskellmode-vim'
 Plugin 'eagletmt/ghcmod-vim'
 
+Plugin 'godlygeek/csapprox'
 "Color Schemes
+Plugin 'zefei/cake16'
 Plugin 'altercation/vim-colors-solarized'
 Plugin 'vim-scripts/wombat256.vim'
 Plugin 'larssmit/vim-getafe'
 
 Plugin 'Shougo/vimshell.vim'
+Plugin 'vim-scripts/Figlet.vim'
 call vundle#end()            " required
 " }}}
 
 " Plugin Settings {{{
 let g:solarized_termcolors=256
-let g:niji_matching_filetypes = ['lisp', 'ruby', 'python', 'javascript', 'haskell', 'ocaml', 'sml']
+let g:niji_matching_filetypes = ['lisp', 'ruby', 'python', 'javascript', 'haskell']
 let g:haddock_browser = "open"
 let g:haddock_browser_callformat = "%s %s"
 let g:windowswap_map_keys = 0 "prevent default bindings
 let g:ctrlp_custom_ignore = 'node_modules\|DS_Store\|git'
+let g:figletFont = "Big"
+vmap <Space>as :Figlet<CR>
 
 let g:turkish_deasciifier_path = '~/Library/turkish-deasciifier/turkish-deasciify'
 vmap <Space>tr :<c-u>call Turkish_Deasciify()<CR>
@@ -121,6 +126,7 @@ autocmd WinEnter * call NERDTreeQuit()
 " }}}
 
 " General {{{
+set colorcolumn=79
 nnoremap j gj
 nnoremap k gk
 vnoremap j gj
@@ -195,6 +201,9 @@ endfunction
 
 " Some Useful Key Mappings {{{
 
+"Set ft
+nmap <Space>ft :set ft=
+
 "Word swap
 nmap <Space>sw dawelp
 nmap <Space>ws dawbP
@@ -203,6 +212,8 @@ nmap <silent> <leader>u :GundoToggle<CR>
 
 "Vim Shell
 nmap <Space>s :VimShell<CR>
+"Stylish Haskell (all file)
+nmap <Space>st :%!stylish-haskell<CR>
 "Git status (vim-fugitive)
 nmap <Space>g :Gstatus<CR>
 
