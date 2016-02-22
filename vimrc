@@ -5,13 +5,17 @@ call vundle#begin()
 Plugin 'gmarik/vundle'
 
 nmap <Leader>op :PluginInstall<CR>
+Plugin 'JuliaLang/julia-vim'
+Plugin 'sophacles/vim-processing'
 
+Plugin 'jeffkreeftmeijer/vim-numbertoggle'
 Plugin 'joom/turkish-deasciifier.vim'
+Plugin 'joom/latex-unicoder.vim'
 Plugin 'bkad/CamelCaseMotion'
 Plugin 'tpope/vim-fugitive'
 Plugin 'airblade/vim-gitgutter'
 Plugin 'terryma/vim-multiple-cursors'
-Plugin 'tpope/vim-commentary'
+Plugin 'joom/vim-commentary'
 Plugin 'vim-scripts/Align'
 Plugin 'valloric/MatchTagAlways'
 Plugin 'MarcWeber/vim-addon-mw-utils'
@@ -20,7 +24,6 @@ Plugin 'garbas/vim-snipmate'
 Plugin 'honza/vim-snippets'
 Plugin 'vim-scripts/Gundo'
 Plugin 'jiangmiao/auto-pairs'
-Plugin 'Lokaltog/vim-easymotion'
 Plugin 'jistr/vim-nerdtree-tabs'
 Plugin 'wesQ3/vim-windowswap'
 Plugin 'tpope/vim-surround'
@@ -32,36 +35,50 @@ Plugin 'gcmt/wildfire.vim'
 Plugin 'Yggdroot/indentLine'
 Plugin 'derekwyatt/vim-scala'
 Plugin 'toyamarinyon/vim-swift'
+Plugin 'vim-scripts/omlet.vim'
+Plugin 'guns/vim-clojure-static'
+Plugin 'rust-lang/rust.vim'
+Plugin 'AndrewRadev/splitjoin.vim'
+Plugin 'tpope/vim-dispatch'
 
 "Front End
 Plugin 'pangloss/vim-javascript'
-Plugin 'maksimr/vim-jsbeautify'
-Plugin 'einars/js-beautify'
 Plugin 'kchmck/vim-coffee-script'
 Plugin 'ap/vim-css-color'
 Plugin 'miripiruni/CSScomb-for-Vim'
 
+"Plugin 'krisajenkins/vim-pipe'
+
 "Haskell
+Plugin 'lambdatoast/elm.vim'
+Plugin 'raichoo/purescript-vim'
+Plugin 'jpalardy/vim-slime'
+Plugin 'idris-hackers/idris-vim'
 Plugin 'Shougo/vimproc.vim'
 " Plugin 'Twinside/vim-haskellConceal'
 Plugin 'travitch/hasksyn'
 Plugin 'scrooloose/syntastic'
 Plugin 'lukerandall/haskellmode-vim'
 Plugin 'eagletmt/ghcmod-vim'
+Plugin 'Twinside/vim-syntax-haskell-cabal'
+Plugin 'pbrisbin/vim-syntax-shakespeare'
+" Plugin 'derekelkins/agda-vim'
+Plugin 'imeckler/mote'
 
 Plugin 'godlygeek/csapprox'
 "Color Schemes
-Plugin 'zefei/cake16'
-Plugin 'altercation/vim-colors-solarized'
+Plugin 'wellsjo/wells-colorscheme.vim'
 Plugin 'vim-scripts/wombat256.vim'
-Plugin 'larssmit/vim-getafe'
+Plugin 'jdkanani/vim-material-theme'
 
 Plugin 'Shougo/vimshell.vim'
-Plugin 'vim-scripts/Figlet.vim'
 call vundle#end()            " required
 " }}}
 
 " Plugin Settings {{{
+let g:slime_target = "tmux"
+let g:slime_paste_file = tempname()
+
 let g:solarized_termcolors=256
 let g:niji_matching_filetypes = ['lisp', 'ruby', 'python', 'javascript', 'haskell']
 let g:haddock_browser = "open"
@@ -70,6 +87,7 @@ let g:windowswap_map_keys = 0 "prevent default bindings
 let g:ctrlp_custom_ignore = 'node_modules\|DS_Store\|git'
 let g:figletFont = "Big"
 vmap <Space>as :Figlet<CR>
+let g:agda_extraincpaths = ["/Users/joomy/Library/agda-stdlib/src"]
 
 let g:turkish_deasciifier_path = '~/Library/turkish-deasciifier/turkish-deasciify'
 vmap <Space>tr :<c-u>call Turkish_Deasciify()<CR>
@@ -78,7 +96,8 @@ vmap <Space>rt :<c-u>call Turkish_Asciify()<CR>
 
 " Airline {{{
 Plugin 'bling/vim-airline'
-let g:airline_theme = 'powerlineish'
+" let g:airline_theme = 'powerlineish'
+let g:airline#extensions#tabline#enabled = 1
 let g:airline_powerline_fonts = 1
 
 " Plugin 'Lokaltog/vim-powerline'
@@ -137,6 +156,7 @@ filetype off
 " set autochdir
 set foldmethod=marker
 set linebreak
+let g:tex_conceal = ""
 
 set number
 
@@ -181,8 +201,9 @@ autocmd FileType xml set omnifunc=xmlcomplete#CompleteTags
 autocmd FileType php set omnifunc=phpcomplete#CompletePHP
 autocmd FileType c set omnifunc=ccomplete#Complete
 autocmd VimEnter * wincmd w
-" EJS templates
 autocmd BufRead,BufNewFile *.ejs set filetype=html
+autocmd BufRead,BufNewFile *.md set filetype=markdown
+autocmd BufRead,BufNewFile *.lagda set filetype=tex
 "Shortcuts for beautifiers
 autocmd FileType javascript noremap <buffer>  <Space>f :call JsBeautify()<cr>
 " for html
@@ -200,7 +221,10 @@ endfunction
 " }}}
 
 " Some Useful Key Mappings {{{
+nmap <Leader>m :Make!<CR>
 
+"reverse string
+vnoremap ;rv c<C-O>:set revins<CR><C-R>"<Esc>:set norevins<CR>
 "Set ft
 nmap <Space>ft :set ft=
 
@@ -221,8 +245,12 @@ nmap <Space>g :Gstatus<CR>
 nmap <Space>w :Wipeout<CR>
 
 "ghc-mod
-vmap <Space>ty :<c-u>GhcModType<CR>
-nmap <Space>yt :GhcModTypeClear<CR>
+vmap <Space>t :<c-u>GhcModType<CR>
+nmap <Space>t :GhcModType<CR>
+nmap <Space>T :GhcModTypeClear<CR>
+nmap <Space>i :GhcModTypeInsert<CR>
+nmap <Space>c :GhcModCheck<CR>
+nmap <Leader>L :GhcModLint<CR>
 
 " emacs-follow-mode functionality
 nmap <silent> <Leader>ef :vsplit<bar>wincmd l<bar>exe "norm! Ljz<c-v><cr>"<cr>:set scb<cr>:wincmd h<cr>:set scb<cr>
@@ -246,7 +274,7 @@ map <End> Gzz
 map <PageUp> <Esc>10kzz
 map <PageDown> <Esc>10jzz
 
-map <Delete> x
+nmap <Delete> $
 
 "for unhighlighing the selections
 nmap <Space>x :let @/=''<CR>
@@ -282,7 +310,7 @@ nmap tg gT
 nmap <Space>a ggVG
 
 "Edit the vimrc file
-nmap <Leader>r :tabnew<CR>:e ~/.vim/vimrc<CR>
+nmap <Leader>rr :tabnew<CR>:e ~/.vim/vimrc<CR>
 "Reload vimrc
 nmap <F5> :source ~/.vimrc<CR>
 
@@ -399,3 +427,4 @@ function! NiceVimGrep()
 endfunction
 nmap <Space>gr :call NiceVimGrep()<CR>
 " }}}
+
