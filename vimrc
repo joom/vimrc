@@ -7,9 +7,8 @@ Plugin 'gmarik/vundle'
 nmap <Leader>op :PluginInstall<CR>
 Plugin 'jez/vim-better-sml'
 Plugin 'gibiansky/vim-latex-objects'
-Plugin 'elixir-lang/vim-elixir'
-Plugin 'jsx/jsx.vim'
 Plugin 'gdetrez/vim-gf'
+Plugin 'junegunn/rainbow_parentheses.vim'
 
 Plugin 'jeffkreeftmeijer/vim-numbertoggle'
 Plugin 'joom/turkish-deasciifier.vim'
@@ -36,7 +35,6 @@ Plugin 'Yggdroot/indentLine'
 Plugin 'derekwyatt/vim-scala'
 Plugin 'toyamarinyon/vim-swift'
 Plugin 'vim-scripts/omlet.vim'
-Plugin 'guns/vim-clojure-static'
 Plugin 'rust-lang/rust.vim'
 Plugin 'tpope/vim-dispatch'
 
@@ -51,17 +49,14 @@ Plugin 'miripiruni/CSScomb-for-Vim'
 "Haskell
 Plugin 'lambdatoast/elm.vim'
 Plugin 'raichoo/purescript-vim'
-Plugin 'jpalardy/vim-slime'
 Plugin 'idris-hackers/idris-vim'
 Plugin 'vim-scripts/coq-syntax'
 Plugin 'Shougo/vimproc.vim'
-" Plugin 'Twinside/vim-haskellConceal'
 Plugin 'travitch/hasksyn'
 Plugin 'scrooloose/syntastic'
 Plugin 'lukerandall/haskellmode-vim'
 Plugin 'eagletmt/ghcmod-vim'
 Plugin 'Twinside/vim-syntax-haskell-cabal'
-Plugin 'pbrisbin/vim-syntax-shakespeare'
 " Plugin 'derekelkins/agda-vim'
 Plugin 'imeckler/mote'
 Plugin 'ndmitchell/ghcid', { 'rtp': 'plugins/nvim' }
@@ -69,12 +64,10 @@ Plugin 'ndmitchell/ghcid', { 'rtp': 'plugins/nvim' }
 Plugin 'godlygeek/csapprox'
 "Color Schemes
 Plugin 'rakr/vim-one'
-" Plugin 'morhetz/gruvbox'
 Plugin 'wellsjo/wells-colorscheme.vim'
 Plugin 'vim-scripts/wombat256.vim'
 Plugin 'jdkanani/vim-material-theme'
 
-Plugin 'Shougo/vimshell.vim'
 Plugin 'moll/vim-bbye'
 call vundle#end()            " required
 " }}}
@@ -95,6 +88,7 @@ let g:turkish_deasciifier_path = 'deasciify'
 vmap <Space>tr :<c-u>call Turkish_Deasciify()<CR>
 vmap <Space>rt :<c-u>call Turkish_Asciify()<CR>
 nnoremap <Leader><BS> :Bdelete<CR> " backspace
+map <Space>p :RainbowParentheses!!<CR>
 
 
 autocmd FileType tex setlocal commentstring=%\ %s
@@ -233,30 +227,17 @@ autocmd FileType html noremap <buffer> <Space>f :call HtmlBeautify()<cr>
 autocmd FileType css noremap <buffer> <Space>f :call CSSBeautify()<cr>
 " Remove trailing whitespace on save
 autocmd BufWritePre * :%s/\s\+$//e
-
-
-function! TabSpace2()
-  %s/\t/  /g
-  return
-endfunction
 " }}}
 
 " Some Useful Key Mappings {{{
 nmap <Space>d "=strftime("%c")<CR>P
 
-nmap <Leader>s :doautocmd Syntax<CR>
 nmap <Leader>m :Make!<CR>
 nmap ge viegw
-
-"reverse string
-vnoremap ;rv c<C-O>:set revins<CR><C-R>"<Esc>:set norevins<CR>
+"
 "Set ft
 nmap <Space>ft :set ft=
 vmap $ g_
-
-"Word swap
-nmap <Space>sw dawelp
-nmap <Space>ws dawbP
 
 nmap <silent> <leader>u :GundoToggle<CR>
 
@@ -292,21 +273,11 @@ nmap <Leader>f :CtrlPLine<CR>
 " Shift-tab
 imap <S-Tab> <Esc><<i
 
-" Mapping external keyboard movement keys
-map <Home> gg
-map <End> Gzz
-map <PageUp> <Esc>10kzz
-map <PageDown> <Esc>10jzz
-
 "for unhighlighing the selections
 nmap <Space>sc :let @/=''<CR>
 
 "split switch
 nnoremap <Leader>[ <C-W>w
-map <F1> <C-W><C-H>
-map <F2> <C-W><C-J>
-map <F3> <C-W><C-K>
-map <F4> <C-W><C-L>
 
 "System clipboard
 vmap <Leader>y "+y
@@ -333,10 +304,6 @@ nmap tg gT
 nmap <Leader>rr :tabnew<CR>:e ~/.vim/vimrc<CR>
 "Reload vimrc
 nmap <F5> :source ~/.vimrc<CR>
-
-"New line before/after the current line without going into insert mode
-nnoremap <silent><F8> :set paste<CR>m`o<Esc>``:set nopaste<CR>
-nnoremap <silent><F9> :set paste<CR>m`O<Esc>``:set nopaste<CR>
 
 "New Tab
 nmap <Leader>n :tabnew<CR>
@@ -386,16 +353,7 @@ function! CurrentLineI()
 endfunction
 " }}}
 "
-" Tabs {{{
-
-function! TRename()
-  let name = input('Enter tab name: ')
-  TName(name)
-endfunction
-
-nmap <Space>r :call TRename()<CR>
-" }}}
-
+"
 " Useful functions {{{
 function! NiceVimGrep()
   let lookfor = input('vimgrep /')
@@ -415,23 +373,6 @@ endfunction
 command! -range ToArray <line1>,<line2> call ToArrayFunction()
 
 " }}}
-
-" Neovim {{{
-Plugin 'kassio/neoterm'
-let g:neoterm_position = 'vertical'
-let g:neoterm_automap_keys = ',tt'
-
-nnoremap <silent> <f10> :TREPLSendFile<cr>
-nnoremap <silent> <f9> :TREPLSendLine<cr>
-vnoremap <silent> <f9> :TREPLSendSelection<cr>
-
-" Useful maps
-" hide/close terminal
-nnoremap <silent> ,th :call neoterm#close()<cr>
-" clear terminal
-nnoremap <silent> ,tl :call neoterm#clear()<cr>
-" kills the current job (send a <c-c>)
-nnoremap <silent> ,tc :call neoterm#kill()<cr>
 
 " Git commands
 command! -nargs=+ Tg :T git <args>
