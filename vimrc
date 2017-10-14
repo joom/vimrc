@@ -5,19 +5,22 @@ call vundle#begin()
 Plugin 'gmarik/vundle'
 
 nmap <Leader>op :PluginInstall<CR>
-Plugin 'JuliaLang/julia-vim'
-Plugin 'sophacles/vim-processing'
+Plugin 'jez/vim-better-sml'
+Plugin 'gibiansky/vim-latex-objects'
+Plugin 'elixir-lang/vim-elixir'
+Plugin 'jsx/jsx.vim'
+Plugin 'gdetrez/vim-gf'
 
 Plugin 'jeffkreeftmeijer/vim-numbertoggle'
 Plugin 'joom/turkish-deasciifier.vim'
 Plugin 'joom/latex-unicoder.vim'
-Plugin 'bkad/CamelCaseMotion'
 Plugin 'tpope/vim-fugitive'
+Plugin 'bkad/CamelCaseMotion'
 Plugin 'airblade/vim-gitgutter'
 Plugin 'terryma/vim-multiple-cursors'
 Plugin 'joom/vim-commentary'
 Plugin 'vim-scripts/Align'
-Plugin 'valloric/MatchTagAlways'
+Plugin 'gregsexton/MatchTag'
 Plugin 'MarcWeber/vim-addon-mw-utils'
 Plugin 'tomtom/tlib_vim'
 Plugin 'garbas/vim-snipmate'
@@ -25,20 +28,16 @@ Plugin 'honza/vim-snippets'
 Plugin 'vim-scripts/Gundo'
 Plugin 'jiangmiao/auto-pairs'
 Plugin 'jistr/vim-nerdtree-tabs'
-Plugin 'wesQ3/vim-windowswap'
 Plugin 'tpope/vim-surround'
 Plugin 'kien/ctrlp.vim'
 Plugin 'ervandew/supertab'
-Plugin 'amdt/vim-niji'
 Plugin 'ConradIrwin/vim-bracketed-paste'
-Plugin 'gcmt/wildfire.vim'
 Plugin 'Yggdroot/indentLine'
 Plugin 'derekwyatt/vim-scala'
 Plugin 'toyamarinyon/vim-swift'
 Plugin 'vim-scripts/omlet.vim'
 Plugin 'guns/vim-clojure-static'
 Plugin 'rust-lang/rust.vim'
-Plugin 'AndrewRadev/splitjoin.vim'
 Plugin 'tpope/vim-dispatch'
 
 "Front End
@@ -54,6 +53,7 @@ Plugin 'lambdatoast/elm.vim'
 Plugin 'raichoo/purescript-vim'
 Plugin 'jpalardy/vim-slime'
 Plugin 'idris-hackers/idris-vim'
+Plugin 'vim-scripts/coq-syntax'
 Plugin 'Shougo/vimproc.vim'
 " Plugin 'Twinside/vim-haskellConceal'
 Plugin 'travitch/hasksyn'
@@ -64,44 +64,48 @@ Plugin 'Twinside/vim-syntax-haskell-cabal'
 Plugin 'pbrisbin/vim-syntax-shakespeare'
 " Plugin 'derekelkins/agda-vim'
 Plugin 'imeckler/mote'
+Plugin 'ndmitchell/ghcid', { 'rtp': 'plugins/nvim' }
 
 Plugin 'godlygeek/csapprox'
 "Color Schemes
+Plugin 'rakr/vim-one'
+" Plugin 'morhetz/gruvbox'
 Plugin 'wellsjo/wells-colorscheme.vim'
 Plugin 'vim-scripts/wombat256.vim'
 Plugin 'jdkanani/vim-material-theme'
 
 Plugin 'Shougo/vimshell.vim'
+Plugin 'moll/vim-bbye'
 call vundle#end()            " required
 " }}}
 
 " Plugin Settings {{{
-let g:slime_target = "tmux"
-let g:slime_paste_file = tempname()
-
-let g:solarized_termcolors=256
-let g:niji_matching_filetypes = ['lisp', 'ruby', 'python', 'javascript', 'haskell']
+set conceallevel=0
+let g:AutoPairs = {'(':')', '[':']', '{':'}',"'":"'",'"':'"'}
 let g:haddock_browser = "open"
 let g:haddock_browser_callformat = "%s %s"
-let g:windowswap_map_keys = 0 "prevent default bindings
-let g:ctrlp_custom_ignore = 'node_modules\|DS_Store\|git'
-let g:figletFont = "Big"
-vmap <Space>as :Figlet<CR>
+let g:ctrlp_custom_ignore = 'node_modules\|DS_Store\|git\|agdai\|bak\|ibc'
+nmap <C-x><C-f> <C-p>
+nmap <Space>p <C-p>
 let g:agda_extraincpaths = ["/Users/joomy/Library/agda-stdlib/src"]
+let g:surround_113 = "``\r''" " surround with LaTeX quotes
+let g:surround_98 = "\\begin{}\r\\end{}" " surround with LaTeX blocks
 
-let g:turkish_deasciifier_path = '~/Library/turkish-deasciifier/turkish-deasciify'
+let g:turkish_deasciifier_path = 'deasciify'
 vmap <Space>tr :<c-u>call Turkish_Deasciify()<CR>
 vmap <Space>rt :<c-u>call Turkish_Asciify()<CR>
+nnoremap <Leader><BS> :Bdelete<CR> " backspace
+
+
+autocmd FileType tex setlocal commentstring=%\ %s
 " }}}
 
 " Airline {{{
-Plugin 'bling/vim-airline'
-" let g:airline_theme = 'powerlineish'
+Plugin 'vim-airline/vim-airline'
+Plugin 'vim-airline/vim-airline-themes'
 let g:airline#extensions#tabline#enabled = 1
 let g:airline_powerline_fonts = 1
 
-" Plugin 'Lokaltog/vim-powerline'
-" let g:Powerline_symbols = 'fancy'
 set laststatus=2
 set t_Co=256
 " }}}
@@ -115,7 +119,7 @@ nnoremap <Space>c :NERDTreeCWD<CR>
 let NERDTreeMinimalUI=1
 let NERDTreeDirArrows=0
 let NERDTreeQuitOnOpen = 1
-let NERDTreeIgnore=['\.pyc$', '\~$']
+let NERDTreeIgnore=['\.pyc$', '\.ibc$', '\.agdai$', '\~$']
 let NERDTreeShowLineNumbers = 1
 let NERDTreeWinSize = 25
 
@@ -145,7 +149,13 @@ autocmd WinEnter * call NERDTreeQuit()
 " }}}
 
 " General {{{
+set ttyfast
+" set ttymouse=xterm2
+" set ttyscroll=3
+set lazyredraw
 set colorcolumn=79
+set wildmenu
+set wildmode=list:longest,full
 nnoremap j gj
 nnoremap k gk
 vnoremap j gj
@@ -162,6 +172,14 @@ set number
 
 syntax on
 set mouse=a
+map <MiddleMouse> <Nop>
+map <2-MiddleMouse> <Nop>
+map <3-MiddleMouse> <Nop>
+map <4-MiddleMouse> <Nop>
+imap <MiddleMouse> <Nop>
+imap <2-MiddleMouse> <Nop>
+imap <3-MiddleMouse> <Nop>
+imap <4-MiddleMouse> <Nop>
 
 filetype plugin indent on
 
@@ -177,7 +195,7 @@ set smarttab
 set shiftwidth=2
 set softtabstop=2
 set tabstop=2
-set wildignore=*.pyc
+set wildignore=*.pyc,*.agdai
 set ignorecase
 set smartcase
 set hlsearch
@@ -189,6 +207,7 @@ set noswapfile
 set nobackup
 set number
 set linespace=3
+set backspace=indent,eol,start
 
 " Omni
 set omnifunc=syntaxcomplete#Complete
@@ -204,6 +223,8 @@ autocmd VimEnter * wincmd w
 autocmd BufRead,BufNewFile *.ejs set filetype=html
 autocmd BufRead,BufNewFile *.md set filetype=markdown
 autocmd BufRead,BufNewFile *.lagda set filetype=tex
+autocmd BufRead,BufNewFile *.v set filetype=coq
+autocmd BufRead,BufNewFile *.spacemacs,*.emacs set filetype=lisp
 "Shortcuts for beautifiers
 autocmd FileType javascript noremap <buffer>  <Space>f :call JsBeautify()<cr>
 " for html
@@ -221,12 +242,17 @@ endfunction
 " }}}
 
 " Some Useful Key Mappings {{{
+nmap <Space>d "=strftime("%c")<CR>P
+
+nmap <Leader>s :doautocmd Syntax<CR>
 nmap <Leader>m :Make!<CR>
+nmap ge viegw
 
 "reverse string
 vnoremap ;rv c<C-O>:set revins<CR><C-R>"<Esc>:set norevins<CR>
 "Set ft
 nmap <Space>ft :set ft=
+vmap $ g_
 
 "Word swap
 nmap <Space>sw dawelp
@@ -262,8 +288,6 @@ nmap <Leader>- :vertical resize -5<CR>
 nmap <Leader>= :vertical resize +5<CR>
 nmap <Tab> :CtrlPBuffer<CR>
 nmap <Leader>f :CtrlPLine<CR>
-nnoremap <silent> <Leader>sw :call WindowSwap#EasyWindowSwap()<CR>
-nmap <Leader>` :call WindowSwap#EasyWindowSwap()<CR><Leader>[:call WindowSwap#EasyWindowSwap()<CR>
 
 " Shift-tab
 imap <S-Tab> <Esc><<i
@@ -274,10 +298,8 @@ map <End> Gzz
 map <PageUp> <Esc>10kzz
 map <PageDown> <Esc>10jzz
 
-nmap <Delete> $
-
 "for unhighlighing the selections
-nmap <Space>x :let @/=''<CR>
+nmap <Space>sc :let @/=''<CR>
 
 "split switch
 nnoremap <Leader>[ <C-W>w
@@ -298,6 +320,7 @@ vmap <Leader>P "+P
 vmap y ygv<Esc>
 
 "save and exit shortcut
+nmap <Leader><Leader> :w<CR>
 nmap <Leader>w :w<CR>
 nmap <Leader>q :q<CR>
 nmap <Leader>wq :wq<CR>
@@ -305,9 +328,6 @@ nmap <Leader>1q :q!<CR>
 map <Space>h <Esc>gT
 map <Space>l <Esc>gt
 nmap tg gT
-
-"select all
-nmap <Space>a ggVG
 
 "Edit the vimrc file
 nmap <Leader>rr :tabnew<CR>:e ~/.vim/vimrc<CR>
@@ -321,9 +341,6 @@ nnoremap <silent><F9> :set paste<CR>m`O<Esc>``:set nopaste<CR>
 "New Tab
 nmap <Leader>n :tabnew<CR>
 
-"Add comma at the end of the previous line
-nmap <Leader>c k$a,<Esc>
-
 "Paste mode toggle
 set pastetoggle=<F5><F5>
 
@@ -335,26 +352,10 @@ vnoremap < <<CR>gv
 map <S-W> <Plug>CamelCaseMotion_w
 map <S-B> <Plug>CamelCaseMotion_b
 map <S-E> <Plug>CamelCaseMotion_e
-
-"Commentary in normal mode
-nmap gc Vgc<Esc>
-
-"Add semicolon at the end of line
-nmap <Space>; $a;<Esc>
-
-"Repeat last command
-nmap !! :<Up><CR>
 " }}}
 
 "Creating new text objects {{{
 Plugin 'kana/vim-textobj-user'
-call textobj#user#plugin('php', {
-\   'code': {
-\     'pattern': ['<?php\>', '?>'],
-\     'select-a': 'aP',
-\     'select-i': 'iP',
-\   },
-\ })
 call textobj#user#plugin('line', {
 \   '-': {
 \     'select-a-function': 'CurrentLineA',
@@ -384,32 +385,8 @@ function! CurrentLineI()
   \ : 0
 endfunction
 " }}}
-
-" Tab Move and Rename {{{
-
-" Move current tab into the specified direction.
 "
-" @param direction -1 for left, 1 for right.
-function! TabMove(direction)
-    " get number of tab pages.
-    let ntp=tabpagenr("$")
-    " move tab, if necessary.
-    if ntp > 1
-        " get number of current tab page.
-        let ctpn=tabpagenr()
-        " move left.
-        if a:direction < 0
-            let index=((ctpn-1+ntp-1)%ntp)
-        else
-            let index=(ctpn%ntp)
-        endif
-
-        " move tab page.
-        execute "tabmove ".index
-    endif
-endfunction
-nmap <C-h> :call TabMove(-1)<CR>
-nmap <C-l> :call TabMove(1)<CR>
+" Tabs {{{
 
 function! TRename()
   let name = input('Enter tab name: ')
@@ -419,12 +396,63 @@ endfunction
 nmap <Space>r :call TRename()<CR>
 " }}}
 
-" Nice Vimgrep {{{
+" Useful functions {{{
 function! NiceVimGrep()
   let lookfor = input('vimgrep /')
   execute "vimgrep /" . lookfor . "/j **"
   cw
 endfunction
 nmap <Space>gr :call NiceVimGrep()<CR>
+
+" convert rows of numbers or text (as if pasted from excel column) to an array
+function! ToArrayFunction() range
+    silent execute a:firstline . "," . a:lastline . "s/^/'/"
+    silent execute a:firstline . "," . a:lastline . "s/$/',/"
+    silent execute a:firstline . "," . a:lastline . "join"
+    silent execute "normal I["
+    silent execute "normal $xa]"
+endfunction
+command! -range ToArray <line1>,<line2> call ToArrayFunction()
+
 " }}}
 
+" Neovim {{{
+Plugin 'kassio/neoterm'
+let g:neoterm_position = 'vertical'
+let g:neoterm_automap_keys = ',tt'
+
+nnoremap <silent> <f10> :TREPLSendFile<cr>
+nnoremap <silent> <f9> :TREPLSendLine<cr>
+vnoremap <silent> <f9> :TREPLSendSelection<cr>
+
+" Useful maps
+" hide/close terminal
+nnoremap <silent> ,th :call neoterm#close()<cr>
+" clear terminal
+nnoremap <silent> ,tl :call neoterm#clear()<cr>
+" kills the current job (send a <c-c>)
+nnoremap <silent> ,tc :call neoterm#kill()<cr>
+
+" Git commands
+command! -nargs=+ Tg :T git <args>
+
+
+set shell=bash
+nnoremap <leader>z :vsplit<CR><C-W>w:terminal<CR>source $HOME/.bash_profile<CR>clear<CR>
+tnoremap <Esc> <C-\><C-n>
+" }}}
+
+" Kinesis Advantage {{{
+nmap <Space> gT
+nmap <Backspace> gt
+nmap <Enter> \
+vmap <Enter> \
+nmap \<Enter> :w<CR>
+vmap \<Enter> :w<CR>
+nnoremap <Space><Esc> <C-W>w
+nmap <Space>] :NERDTreeTabsToggle<CR>
+" }}}
+
+" Idris {{{
+nmap <Space>c cs])aList <Esc>
+" }}}
