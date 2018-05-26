@@ -14,6 +14,7 @@ Plugin 'jeffkreeftmeijer/vim-numbertoggle'
 Plugin 'joom/turkish-deasciifier.vim'
 Plugin 'joom/latex-unicoder.vim'
 Plugin 'tpope/vim-fugitive'
+Plugin 'tpope/vim-repeat'
 Plugin 'bkad/CamelCaseMotion'
 Plugin 'airblade/vim-gitgutter'
 Plugin 'terryma/vim-multiple-cursors'
@@ -28,7 +29,7 @@ Plugin 'vim-scripts/Gundo'
 Plugin 'jiangmiao/auto-pairs'
 Plugin 'jistr/vim-nerdtree-tabs'
 Plugin 'tpope/vim-surround'
-Plugin 'kien/ctrlp.vim'
+Plugin 'ctrlpvim/ctrlp.vim'
 Plugin 'ervandew/supertab'
 Plugin 'ConradIrwin/vim-bracketed-paste'
 Plugin 'Yggdroot/indentLine'
@@ -50,10 +51,12 @@ Plugin 'miripiruni/CSScomb-for-Vim'
 Plugin 'lambdatoast/elm.vim'
 Plugin 'raichoo/purescript-vim'
 Plugin 'idris-hackers/idris-vim'
+Plugin 'vmchale/ipkg-vim'
 Plugin 'vim-scripts/coq-syntax'
 Plugin 'Shougo/vimproc.vim'
+" Plugin 'w0rp/ale'
 Plugin 'travitch/hasksyn'
-Plugin 'scrooloose/syntastic'
+" Plugin 'scrooloose/syntastic'
 Plugin 'lukerandall/haskellmode-vim'
 Plugin 'eagletmt/ghcmod-vim'
 Plugin 'Twinside/vim-syntax-haskell-cabal'
@@ -63,10 +66,7 @@ Plugin 'ndmitchell/ghcid', { 'rtp': 'plugins/nvim' }
 
 Plugin 'godlygeek/csapprox'
 "Color Schemes
-Plugin 'rakr/vim-one'
-Plugin 'wellsjo/wells-colorscheme.vim'
 Plugin 'vim-scripts/wombat256.vim'
-Plugin 'jdkanani/vim-material-theme'
 
 Plugin 'moll/vim-bbye'
 call vundle#end()            " required
@@ -77,9 +77,9 @@ set conceallevel=0
 let g:AutoPairs = {'(':')', '[':']', '{':'}',"'":"'",'"':'"'}
 let g:haddock_browser = "open"
 let g:haddock_browser_callformat = "%s %s"
-let g:ctrlp_custom_ignore = 'node_modules\|DS_Store\|git\|agdai\|bak\|ibc'
+let g:ctrlp_custom_ignore = 'node_modules\|DS_Store\|git\|agdai\|bak\|ibc\|elc\|\.hi\|\.o\|\.dyn_o\|\.dyn_hi'
 nmap <C-x><C-f> <C-p>
-nmap <Space>p <C-p>
+nmap <Leader>g <C-p>
 let g:agda_extraincpaths = ["/Users/joomy/Library/agda-stdlib/src"]
 let g:surround_113 = "``\r''" " surround with LaTeX quotes
 let g:surround_98 = "\\begin{}\r\\end{}" " surround with LaTeX blocks
@@ -88,13 +88,19 @@ let g:turkish_deasciifier_path = 'deasciify'
 vmap <Space>tr :<c-u>call Turkish_Deasciify()<CR>
 vmap <Space>rt :<c-u>call Turkish_Asciify()<CR>
 nnoremap <Leader><BS> :Bdelete<CR> " backspace
+" nnoremap <Leader><BS> :Bdelete<CR>:q<CR>
 map <Space>p :RainbowParentheses!!<CR>
 
+nmap <Leader>hj <Plug>GitGutterNextHunk
+nmap <Leader>hk <Plug>GitGutterPrevHunk
+nmap <Leader>hv <Plug>GitGutterPreviewHunk
+" <Leader>hs stages hunk, <Leader>hu undoes hunk
 
 autocmd FileType tex setlocal commentstring=%\ %s
 " }}}
 
 " Airline {{{
+set noshowmode
 Plugin 'vim-airline/vim-airline'
 Plugin 'vim-airline/vim-airline-themes'
 let g:airline#extensions#tabline#enabled = 1
@@ -113,7 +119,7 @@ nnoremap <Space>c :NERDTreeCWD<CR>
 let NERDTreeMinimalUI=1
 let NERDTreeDirArrows=0
 let NERDTreeQuitOnOpen = 1
-let NERDTreeIgnore=['\.pyc$', '\.ibc$', '\.agdai$', '\~$']
+let NERDTreeIgnore=['\.pyc$', '\.elc$', '\.ibc$', '\.agdai$', '\~$']
 let NERDTreeShowLineNumbers = 1
 let NERDTreeWinSize = 25
 
@@ -143,6 +149,10 @@ autocmd WinEnter * call NERDTreeQuit()
 " }}}
 
 " General {{{
+if has("gui_running")
+  set guifont=Iosevka\ Light:h17
+  set columnspace=-1
+endif
 set ttyfast
 " set ttymouse=xterm2
 " set ttyscroll=3
@@ -155,6 +165,7 @@ nnoremap k gk
 vnoremap j gj
 vnoremap k gk
 colorscheme gruvbox
+
 set nocompatible
 filetype off
 " set autochdir
@@ -189,7 +200,7 @@ set smarttab
 set shiftwidth=2
 set softtabstop=2
 set tabstop=2
-set wildignore=*.pyc,*.agdai
+set wildignore=*.pyc,*.agdai,*.elc
 set ignorecase
 set smartcase
 set hlsearch
@@ -243,8 +254,6 @@ nmap <silent> <leader>u :GundoToggle<CR>
 
 "Vim Shell
 nmap <Space>s :VimShell<CR>
-"Stylish Haskell (all file)
-nmap <Space>st :%!stylish-haskell<CR>
 "Git status (vim-fugitive)
 nmap <Space>g :Gstatus<CR>
 
@@ -352,8 +361,7 @@ function! CurrentLineI()
   \ : 0
 endfunction
 " }}}
-"
-"
+
 " Useful functions {{{
 function! NiceVimGrep()
   let lookfor = input('vimgrep /')
@@ -374,26 +382,71 @@ command! -range ToArray <line1>,<line2> call ToArrayFunction()
 
 " }}}
 
-" Git commands
-command! -nargs=+ Tg :T git <args>
-
-
+" Git commands {{{
 set shell=bash
-nnoremap <leader>z :vsplit<CR><C-W>w:terminal<CR>source $HOME/.bash_profile<CR>clear<CR>
-tnoremap <Esc> <C-\><C-n>
+nnoremap <leader>z :vsplit<CR><C-w>w:terminal<CR>source $HOME/.bash_profile<CR>clear<CR>
+if has("nvim")
+  tnoremap <Esc> <C-\><C-n>
+endif
 " }}}
 
 " Kinesis Advantage {{{
-nmap <Space> gT
-nmap <Backspace> gt
 nmap <Enter> \
 vmap <Enter> \
 nmap \<Enter> :w<CR>
 vmap \<Enter> :w<CR>
-nnoremap <Space><Esc> <C-W>w
+nnoremap <BS> <C-w>w
 nmap <Space>] :NERDTreeTabsToggle<CR>
 " }}}
 
-" Idris {{{
+" Haskell & Idris {{{
 nmap <Space>c cs])aList <Esc>
+nmap <Space>de /\(^\s*\<data\>\)\@!\&\(^\s*\<type\>\)\@!\&\(^\s\+\<let\>\)\@!\&^\s*[a-z].\{-}=<CR>
+" autocmd FileType haskell nnoremap <buffer> <leader>? :call ale#cursor#ShowCursorDetail()<cr>
+"}}}
+
+" Thesis {{{
+nmap <Space>kw ysiw}i\kw<Esc>
+nmap <Space>ty ysiw}i\ty<Esc>
+nmap <Space>dt ysiw}i\dt<Esc>
+nmap <Space>fn ysiw}i\fn<Esc>
+nmap <Space>bn ysiw}i\bn<Esc>
+nmap <Space>tn i\kw{`\{\{}<Esc>ea\kw{\}\}}<Esc>
+" }}}
+
+" Stylish Haskell {{{
+let g:stylish_haskell_command = "stylish-haskell"
+
+function! g:OverwriteBuffer(output)
+  let winview = winsaveview()
+  silent! undojoin
+  normal! gg"_dG
+  call append(0, split(a:output, '\v\n'))
+  normal! G"_dd
+  call winrestview(winview)
+endfunction
+
+function! g:StylishHaskell()
+  if executable(g:stylish_haskell_command)
+    call g:RunStylishHaskell()
+  elseif !exists("s:exec_warned")
+    let s:exec_warned = 1
+    echom "stylish-haskell executable not found"
+  endif
+endfunction
+
+function! g:RunStylishHaskell()
+  let output = system(g:stylish_haskell_command . " " . bufname("%"))
+  let errors = matchstr(output, '\(Language\.Haskell\.Stylish\.Parse\.parseModule:[^\x0]*\)')
+  if v:shell_error != 0
+    echom output
+  elseif empty(errors)
+    call OverwriteBuffer(output)
+    write
+  else
+    echom errors
+  endif
+endfunction
+
+nmap <Leader>sh :call g:StylishHaskell()<CR>
 " }}}
