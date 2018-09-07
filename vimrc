@@ -5,10 +5,15 @@ call vundle#begin()
 Plugin 'gmarik/vundle'
 
 nmap <Leader>op :PluginInstall<CR>
+Plugin 'psosera/ott-vim'
 Plugin 'jez/vim-better-sml'
 Plugin 'gibiansky/vim-latex-objects'
 Plugin 'gdetrez/vim-gf'
 Plugin 'junegunn/rainbow_parentheses.vim'
+
+" Coq
+Plugin 'let-def/vimbufsync'
+Plugin 'the-lambda-church/coquille'
 
 Plugin 'jeffkreeftmeijer/vim-numbertoggle'
 Plugin 'joom/turkish-deasciifier.vim'
@@ -48,17 +53,18 @@ Plugin 'miripiruni/CSScomb-for-Vim'
 "Plugin 'krisajenkins/vim-pipe'
 
 "Haskell
+" Plugin 'parsonsmatt/intero-neovim'
 Plugin 'lambdatoast/elm.vim'
 Plugin 'raichoo/purescript-vim'
 Plugin 'idris-hackers/idris-vim'
 Plugin 'vmchale/ipkg-vim'
 Plugin 'vim-scripts/coq-syntax'
-Plugin 'Shougo/vimproc.vim'
+" Plugin 'Shougo/vimproc.vim'
 " Plugin 'w0rp/ale'
 Plugin 'travitch/hasksyn'
 " Plugin 'scrooloose/syntastic'
-Plugin 'lukerandall/haskellmode-vim'
-Plugin 'eagletmt/ghcmod-vim'
+" Plugin 'lukerandall/haskellmode-vim'
+" Plugin 'eagletmt/ghcmod-vim'
 Plugin 'Twinside/vim-syntax-haskell-cabal'
 " Plugin 'derekelkins/agda-vim'
 Plugin 'imeckler/mote'
@@ -78,7 +84,10 @@ let g:AutoPairs = {'(':')', '[':']', '{':'}',"'":"'",'"':'"'}
 let g:haddock_browser = "open"
 let g:haddock_browser_callformat = "%s %s"
 let g:ctrlp_custom_ignore = 'node_modules\|DS_Store\|git\|agdai\|bak\|ibc\|elc\|\.hi\|\.o\|\.dyn_o\|\.dyn_hi'
+let g:ctrlp_working_path_mode = 0
 nmap <C-x><C-f> <C-p>
+nmap <C-j> jzz
+nmap <C-k> kzz
 nmap <Leader>g <C-p>
 let g:agda_extraincpaths = ["/Users/joomy/Library/agda-stdlib/src"]
 let g:surround_113 = "``\r''" " surround with LaTeX quotes
@@ -97,6 +106,7 @@ nmap <Leader>hv <Plug>GitGutterPreviewHunk
 " <Leader>hs stages hunk, <Leader>hu undoes hunk
 
 autocmd FileType tex setlocal commentstring=%\ %s
+autocmd FileType coq setlocal commentstring=(*\ %s\ *)
 " }}}
 
 " Airline {{{
@@ -250,6 +260,8 @@ nmap ge viegw
 nmap <Space>ft :set ft=
 vmap $ g_
 
+nmap EE :tabdo e!<CR>
+
 nmap <silent> <leader>u :GundoToggle<CR>
 
 "Vim Shell
@@ -311,6 +323,7 @@ nmap tg gT
 
 "Edit the vimrc file
 nmap <Leader>rr :tabnew<CR>:e ~/.vim/vimrc<CR>
+nmap <Leader>ll :tabdo e<CR>
 "Reload vimrc
 nmap <F5> :source ~/.vimrc<CR>
 
@@ -394,15 +407,78 @@ endif
 nmap <Enter> \
 vmap <Enter> \
 nmap \<Enter> :w<CR>
-vmap \<Enter> :w<CR>
+nmap <Enter><Enter> :w<CR>
+vmap <Enter><Enter> :w<CR>
 nnoremap <BS> <C-w>w
 nmap <Space>] :NERDTreeTabsToggle<CR>
+nmap <Space>rst :NERDTreeTabsToggle<CR>:NERDTreeTabsToggle<CR>
 " }}}
 
 " Haskell & Idris {{{
 nmap <Space>c cs])aList <Esc>
 nmap <Space>de /\(^\s*\<data\>\)\@!\&\(^\s*\<type\>\)\@!\&\(^\s\+\<let\>\)\@!\&^\s*[a-z].\{-}=<CR>
 " autocmd FileType haskell nnoremap <buffer> <leader>? :call ale#cursor#ShowCursorDetail()<cr>
+
+function! OpenAllHaskell()
+  args *.hs
+  argdo tabe
+  q
+  tabdo e
+endfunction
+nmap <Leader>hs :call OpenAllHaskell()<CR>
+
+" augroup interoMaps
+"   au!
+"   " Maps for intero. Restrict to Haskell buffers so the bindings don't collide.
+
+"   " Background process and window management
+"   au FileType haskell nnoremap <silent> <leader>is :InteroStart<CR>
+"   au FileType haskell nnoremap <silent> <leader>ik :InteroKill<CR>
+
+"   " Open intero/GHCi split horizontally
+"   au FileType haskell nnoremap <silent> <leader>io :InteroOpen<CR>
+"   " Open intero/GHCi split vertically
+"   au FileType haskell nnoremap <silent> <leader>iov :InteroOpen<CR><C-W>H
+"   au FileType haskell nnoremap <silent> <leader>ih :InteroHide<CR>
+
+"   " Reloading (pick one)
+"   " Automatically reload on save
+"   au BufWritePost *.hs InteroReload
+"   " Manually save and reload
+"   au FileType haskell nnoremap <silent> <leader>wr :w \| :InteroReload<CR>
+
+"   " Load individual modules
+"   au FileType haskell nnoremap <silent> <leader>il :InteroLoadCurrentModule<CR>
+"   au FileType haskell nnoremap <silent> <leader>if :InteroLoadCurrentFile<CR>
+
+"   " Type-related information
+"   " Heads up! These next two differ from the rest.
+"   au FileType haskell map <silent> <leader>t <Plug>InteroGenericType
+"   au FileType haskell map <silent> <leader>T <Plug>InteroType
+"   au FileType haskell nnoremap <silent> <leader>it :InteroTypeInsert<CR>
+
+"   " Navigation
+"   au FileType haskell nnoremap <silent> <leader>jd :InteroGoToDef<CR>
+
+"   " Managing targets
+"   " Prompts you to enter targets (no silent):
+"   au FileType haskell nnoremap <leader>ist :InteroSetTargets<SPACE>
+" augroup END
+
+" " Intero starts automatically. Set this if you'd like to prevent that.
+" let g:intero_start_immediately = 1
+
+" " Enable type information on hover (when holding cursor at point for ~1 second).
+" let g:intero_type_on_hover = 1
+
+" " Change the intero window size; default is 10.
+" let g:intero_window_size = 15
+
+" " Sets the intero window to split vertically; default is horizontal
+" let g:intero_vertical_split = 1
+
+" " OPTIONAL: Make the update time shorter, so the type info will trigger faster.
+" set updatetime=500
 "}}}
 
 " Thesis {{{
@@ -449,4 +525,33 @@ function! g:RunStylishHaskell()
 endfunction
 
 nmap <Leader>sh :call g:StylishHaskell()<CR>
+" }}}
+
+" Typos {{{
+command WQ wq
+command Wq wq
+command W w
+command Q q
+map Q <Nop>
+" }}}
+
+" Coq {{{
+" Maps Coquille commands to CoqIDE default key bindings
+" autocmd FileType coq CoqLaunch
+autocmd Filetype coq call SetCoqOptions()
+function SetCoqOptions()
+  CoqLaunch
+
+  map <buffer> <silent> <Space><Left>    :CoqUndo<CR>
+  map <buffer> <silent> <Space><Right>  :CoqNext<CR>
+  map <buffer> <silent> <Space><Enter> :CoqToCursor<CR>
+
+  imap <buffer> <silent> <Space><Left>    <C-\><C-o>:CoqUndo<CR>
+  imap <buffer> <silent> <Space><Right>  <C-\><C-o>:CoqNext<CR>
+  imap <buffer> <silent> <Space><Enter> <C-\><C-o>:CoqToCursor<CR>
+
+  hi CheckedByCoq ctermbg=0 guibg=LightGreen
+  hi SentToCoq ctermbg=60 guibg=LimeGreen
+  nmap QQ :bufdo q<CR>
+endfunction
 " }}}
