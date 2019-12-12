@@ -5,15 +5,17 @@ call vundle#begin()
 Plugin 'gmarik/vundle'
 
 nmap <Leader>op :PluginInstall<CR>
+Plugin 'zerowidth/vim-copy-as-rtf'
 Plugin 'psosera/ott-vim'
 Plugin 'jez/vim-better-sml'
 Plugin 'gibiansky/vim-latex-objects'
 Plugin 'gdetrez/vim-gf'
 Plugin 'junegunn/rainbow_parentheses.vim'
+Plugin 'wlangstroth/vim-racket'
 
 " Coq
 Plugin 'let-def/vimbufsync'
-Plugin 'the-lambda-church/coquille'
+" Plugin 'the-lambda-church/coquille'
 
 Plugin 'jeffkreeftmeijer/vim-numbertoggle'
 Plugin 'joom/turkish-deasciifier.vim'
@@ -38,10 +40,10 @@ Plugin 'ctrlpvim/ctrlp.vim'
 Plugin 'ervandew/supertab'
 Plugin 'ConradIrwin/vim-bracketed-paste'
 Plugin 'Yggdroot/indentLine'
-Plugin 'derekwyatt/vim-scala'
-Plugin 'toyamarinyon/vim-swift'
-Plugin 'vim-scripts/omlet.vim'
-Plugin 'rust-lang/rust.vim'
+" Plugin 'derekwyatt/vim-scala'
+" Plugin 'toyamarinyon/vim-swift'
+" Plugin 'vim-scripts/omlet.vim'
+" Plugin 'rust-lang/rust.vim'
 Plugin 'tpope/vim-dispatch'
 
 "Front End
@@ -62,7 +64,8 @@ Plugin 'vim-scripts/coq-syntax'
 " Plugin 'Shougo/vimproc.vim'
 " Plugin 'w0rp/ale'
 Plugin 'travitch/hasksyn'
-" Plugin 'scrooloose/syntastic'
+Plugin 'scrooloose/syntastic'
+" Plugin 'mlr-msft/vim-loves-dafny'
 " Plugin 'lukerandall/haskellmode-vim'
 " Plugin 'eagletmt/ghcmod-vim'
 Plugin 'Twinside/vim-syntax-haskell-cabal'
@@ -107,6 +110,7 @@ nmap <Leader>hv <Plug>GitGutterPreviewHunk
 
 autocmd FileType tex setlocal commentstring=%\ %s
 autocmd FileType coq setlocal commentstring=(*\ %s\ *)
+autocmd FileType ocaml setlocal commentstring=(*\ %s\ *)
 " }}}
 
 " Airline {{{
@@ -210,7 +214,7 @@ set smarttab
 set shiftwidth=2
 set softtabstop=2
 set tabstop=2
-set wildignore=*.pyc,*.agdai,*.elc
+set wildignore=*.pyc,*.agdai,*.elc,*.vo,*.glob
 set ignorecase
 set smartcase
 set hlsearch
@@ -239,7 +243,10 @@ autocmd BufRead,BufNewFile *.ejs set filetype=html
 autocmd BufRead,BufNewFile *.md set filetype=markdown
 autocmd BufRead,BufNewFile *.lagda set filetype=tex
 autocmd BufRead,BufNewFile *.v set filetype=coq
+autocmd BufRead,BufNewFile *.json set filetype=javascript
 autocmd BufRead,BufNewFile *.spacemacs,*.emacs set filetype=lisp
+autocmd BufRead,BufNewFile *.kl set filetype=racket
+autocmd BufRead,BufNewFile *.ml4 set filetype=ocaml
 "Shortcuts for beautifiers
 autocmd FileType javascript noremap <buffer>  <Space>f :call JsBeautify()<cr>
 " for html
@@ -273,12 +280,12 @@ nmap <Space>g :Gstatus<CR>
 nmap <Space>w :Wipeout<CR>
 
 "ghc-mod
-vmap <Space>t :<c-u>GhcModType<CR>
-nmap <Space>t :GhcModType<CR>
-nmap <Space>T :GhcModTypeClear<CR>
-nmap <Space>i :GhcModTypeInsert<CR>
-nmap <Space>c :GhcModCheck<CR>
-nmap <Leader>L :GhcModLint<CR>
+" vmap <Space>t :<c-u>GhcModType<CR>
+" nmap <Space>t :GhcModType<CR>
+" nmap <Space>T :GhcModTypeClear<CR>
+" nmap <Space>i :GhcModTypeInsert<CR>
+" nmap <Space>c :GhcModCheck<CR>
+" nmap <Leader>L :GhcModLint<CR>
 
 " emacs-follow-mode functionality
 nmap <silent> <Leader>ef :vsplit<bar>wincmd l<bar>exe "norm! Ljz<c-v><cr>"<cr>:set scb<cr>:wincmd h<cr>:set scb<cr>
@@ -538,20 +545,31 @@ map Q <Nop>
 " Coq {{{
 " Maps Coquille commands to CoqIDE default key bindings
 " autocmd FileType coq CoqLaunch
-autocmd Filetype coq call SetCoqOptions()
-function SetCoqOptions()
-  CoqLaunch
+" autocmd Filetype coq call SetCoqOptions()
+" function SetCoqOptions()
+"   CoqLaunch
 
-  map <buffer> <silent> <Space><Left>    :CoqUndo<CR>
-  map <buffer> <silent> <Space><Right>  :CoqNext<CR>
-  map <buffer> <silent> <Space><Enter> :CoqToCursor<CR>
+"   map <buffer> <silent> <Space><Left>    :CoqUndo<CR>
+"   map <buffer> <silent> <Space><Right>  :CoqNext<CR>
+"   map <buffer> <silent> <Space><Enter> :CoqToCursor<CR>
 
-  imap <buffer> <silent> <Space><Left>    <C-\><C-o>:CoqUndo<CR>
-  imap <buffer> <silent> <Space><Right>  <C-\><C-o>:CoqNext<CR>
-  imap <buffer> <silent> <Space><Enter> <C-\><C-o>:CoqToCursor<CR>
+"   imap <buffer> <silent> <Space><Left>    <C-\><C-o>:CoqUndo<CR>
+"   imap <buffer> <silent> <Space><Right>  <C-\><C-o>:CoqNext<CR>
+"   imap <buffer> <silent> <Space><Enter> <C-\><C-o>:CoqToCursor<CR>
 
-  hi CheckedByCoq ctermbg=0 guibg=LightGreen
-  hi SentToCoq ctermbg=60 guibg=LimeGreen
-  nmap QQ :bufdo q<CR>
-endfunction
+"   hi CheckedByCoq ctermbg=0 guibg=LightGreen
+"   hi SentToCoq ctermbg=60 guibg=LimeGreen
+"   nmap QQ :bufdo q<CR>
+" endfunction
+" }}}
+
+" Dafny {{{
+
+let g:syntastic_dafny_dafny_args = '-allowGlobals'
+let g:syntastic_mode_map = {
+        \ "mode": "active",
+        \ "passive_filetypes": ["dafny"] }
+" (optional) map save and check current file to <leader>c
+noremap <Leader>c :w<CR>:SyntasticCheck<CR>
+
 " }}}
