@@ -1,10 +1,15 @@
 " Vundle {{{
 
 set rtp+=~/.vim/bundle/Vundle.vim
+set rtp+=~/kip/.vim
 call vundle#begin()
 Plugin 'gmarik/vundle'
 
 nmap <Leader>op :PluginInstall<CR>
+Plugin 'autozimu/LanguageClient-neovim', {
+    \ 'branch': 'next',
+    \ 'do': 'bash install.sh',
+    \ }
 Plugin 'zerowidth/vim-copy-as-rtf'
 Plugin 'psosera/ott-vim'
 Plugin 'jez/vim-better-sml'
@@ -22,6 +27,7 @@ Plugin 'joom/turkish-deasciifier.vim'
 Plugin 'joom/latex-unicoder.vim'
 Plugin 'tpope/vim-fugitive'
 Plugin 'tpope/vim-repeat'
+Plugin 'tikhomirov/vim-glsl'
 Plugin 'bkad/CamelCaseMotion'
 Plugin 'airblade/vim-gitgutter'
 Plugin 'terryma/vim-multiple-cursors'
@@ -41,13 +47,15 @@ Plugin 'ervandew/supertab'
 Plugin 'ConradIrwin/vim-bracketed-paste'
 Plugin 'Yggdroot/indentLine'
 " Plugin 'derekwyatt/vim-scala'
+Plugin 'vmchale/ats-vim'
 " Plugin 'toyamarinyon/vim-swift'
 " Plugin 'vim-scripts/omlet.vim'
-" Plugin 'rust-lang/rust.vim'
+Plugin 'rust-lang/rust.vim'
 Plugin 'tpope/vim-dispatch'
 
 "Front End
 Plugin 'pangloss/vim-javascript'
+Plugin 'leafgarland/typescript-vim'
 Plugin 'kchmck/vim-coffee-script'
 Plugin 'ap/vim-css-color'
 Plugin 'miripiruni/CSScomb-for-Vim'
@@ -254,7 +262,8 @@ autocmd FileType html noremap <buffer> <Space>f :call HtmlBeautify()<cr>
 " for css or scss
 autocmd FileType css noremap <buffer> <Space>f :call CSSBeautify()<cr>
 " Remove trailing whitespace on save
-autocmd BufWritePre * :%s/\s\+$//e
+" autocmd BufWritePre * :%s/\s\+$//e
+nmap <Leader>ts :%s/\s\+$//e
 " }}}
 
 " Some Useful Key Mappings {{{
@@ -278,6 +287,8 @@ nmap <Space>g :Gstatus<CR>
 
 "Deletes unused buffers
 nmap <Space>w :Wipeout<CR>
+
+nmap <Space>rl :set invrightleft<CR>
 
 "ghc-mod
 " vmap <Space>t :<c-u>GhcModType<CR>
@@ -572,4 +583,10 @@ let g:syntastic_mode_map = {
 " (optional) map save and check current file to <leader>c
 noremap <Leader>c :w<CR>:SyntasticCheck<CR>
 
+" }}}
+
+" Rust {{{
+let g:LanguageClient_serverCommands = {
+\ 'rust': ['rust-analyzer'],
+\ }
 " }}}
