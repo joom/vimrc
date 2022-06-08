@@ -2,6 +2,7 @@
 
 set rtp+=~/.vim/bundle/Vundle.vim
 set rtp+=~/kip/.vim
+set rtp+=~/.vim
 call vundle#begin()
 Plugin 'gmarik/vundle'
 
@@ -36,7 +37,6 @@ Plugin 'vim-scripts/Align'
 Plugin 'gregsexton/MatchTag'
 Plugin 'MarcWeber/vim-addon-mw-utils'
 Plugin 'tomtom/tlib_vim'
-Plugin 'garbas/vim-snipmate'
 Plugin 'honza/vim-snippets'
 Plugin 'vim-scripts/Gundo'
 Plugin 'jiangmiao/auto-pairs'
@@ -130,6 +130,7 @@ let g:airline_powerline_fonts = 1
 
 set laststatus=2
 set t_Co=256
+syntax on
 " }}}
 
 " NERDTree {{{
@@ -247,6 +248,7 @@ autocmd FileType xml set omnifunc=xmlcomplete#CompleteTags
 autocmd FileType php set omnifunc=phpcomplete#CompletePHP
 autocmd FileType c set omnifunc=ccomplete#Complete
 autocmd VimEnter * wincmd w
+autocmd BufRead,BufNewFile *.p set filetype=rust
 autocmd BufRead,BufNewFile *.ejs set filetype=html
 autocmd BufRead,BufNewFile *.md set filetype=markdown
 autocmd BufRead,BufNewFile *.lagda set filetype=tex
@@ -332,8 +334,8 @@ vmap y ygv<Esc>
 "save and exit shortcut
 nmap <Leader><Leader> :w<CR>
 nmap <Leader>w :w<CR>
-nmap <Leader>q :q<CR>
-nmap <Leader>wq :wq<CR>
+nmap <Leader>q :bd<CR>
+nmap <Leader>wq :w\|bd<CR>
 nmap <Leader>1q :q!<CR>
 map <Space>h <Esc>gT
 map <Space>l <Esc>gt
@@ -589,4 +591,17 @@ noremap <Leader>c :w<CR>:SyntasticCheck<CR>
 let g:LanguageClient_serverCommands = {
 \ 'rust': ['rust-analyzer'],
 \ }
+let g:LanguageClient_useVirtualText = "All"
+" let g:LanguageClient_useVirtualText = "Diagnostics"
+hi virtualTexthl ctermbg=gray
+hi Todo ctermbg=gray
+hi LanguageClientInfoSign ctermbg=gray
+hi LanguageClientInfo ctermbg=gray
+hi LanguageClientCodeLens ctermbg=208
+hi LanguageClientCodeLens ctermfg=236
+nnoremap <Leader>t :call LanguageClient#textDocument_hover()<CR>
+nnoremap <Leader>d :call LanguageClient#textDocument_definition()<CR>
+nnoremap <Leader>h :call LanguageClient#handleCodeLensAction()<CR>
+nnoremap <Leader>ft :call LanguageClient#textDocument_formatting()<CR>
+let g:indentLine_char_list = ['|', '¦', '┆', '┊']
 " }}}
