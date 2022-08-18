@@ -1,5 +1,4 @@
 " Vundle {{{
-
 set rtp+=~/.vim/bundle/Vundle.vim
 set rtp+=~/kip/.vim
 set rtp+=~/.vim
@@ -18,11 +17,6 @@ Plugin 'gibiansky/vim-latex-objects'
 Plugin 'gdetrez/vim-gf'
 Plugin 'junegunn/rainbow_parentheses.vim'
 Plugin 'wlangstroth/vim-racket'
-
-" Coq
-Plugin 'let-def/vimbufsync'
-" Plugin 'the-lambda-church/coquille'
-
 Plugin 'jeffkreeftmeijer/vim-numbertoggle'
 Plugin 'joom/turkish-deasciifier.vim'
 Plugin 'joom/latex-unicoder.vim'
@@ -45,11 +39,7 @@ Plugin 'tpope/vim-surround'
 Plugin 'ctrlpvim/ctrlp.vim'
 Plugin 'ervandew/supertab'
 Plugin 'ConradIrwin/vim-bracketed-paste'
-Plugin 'Yggdroot/indentLine'
-" Plugin 'derekwyatt/vim-scala'
-Plugin 'vmchale/ats-vim'
-" Plugin 'toyamarinyon/vim-swift'
-" Plugin 'vim-scripts/omlet.vim'
+" Plugin 'Yggdroot/indentLine'
 Plugin 'rust-lang/rust.vim'
 Plugin 'tpope/vim-dispatch'
 
@@ -60,29 +50,21 @@ Plugin 'kchmck/vim-coffee-script'
 Plugin 'ap/vim-css-color'
 Plugin 'miripiruni/CSScomb-for-Vim'
 
-"Plugin 'krisajenkins/vim-pipe'
-
 "Haskell
-" Plugin 'parsonsmatt/intero-neovim'
 Plugin 'lambdatoast/elm.vim'
 Plugin 'raichoo/purescript-vim'
 Plugin 'idris-hackers/idris-vim'
 Plugin 'vmchale/ipkg-vim'
 Plugin 'vim-scripts/coq-syntax'
-" Plugin 'Shougo/vimproc.vim'
-" Plugin 'w0rp/ale'
 Plugin 'travitch/hasksyn'
 Plugin 'scrooloose/syntastic'
-" Plugin 'mlr-msft/vim-loves-dafny'
-" Plugin 'lukerandall/haskellmode-vim'
-" Plugin 'eagletmt/ghcmod-vim'
 Plugin 'Twinside/vim-syntax-haskell-cabal'
-" Plugin 'derekelkins/agda-vim'
 Plugin 'imeckler/mote'
 Plugin 'ndmitchell/ghcid', { 'rtp': 'plugins/nvim' }
 
 Plugin 'godlygeek/csapprox'
 "Color Schemes
+Plugin 'gummesson/stereokai.vim'
 Plugin 'vim-scripts/wombat256.vim'
 
 Plugin 'moll/vim-bbye'
@@ -180,7 +162,7 @@ set ttyfast
 " set ttymouse=xterm2
 " set ttyscroll=3
 set lazyredraw
-set colorcolumn=79
+" set colorcolumn=79
 set wildmenu
 set wildmode=list:longest,full
 nnoremap j gj
@@ -434,157 +416,12 @@ nmap <Space>] :NERDTreeTabsToggle<CR>
 nmap <Space>rst :NERDTreeTabsToggle<CR>:NERDTreeTabsToggle<CR>
 " }}}
 
-" Haskell & Idris {{{
-nmap <Space>c cs])aList <Esc>
-nmap <Space>de /\(^\s*\<data\>\)\@!\&\(^\s*\<type\>\)\@!\&\(^\s\+\<let\>\)\@!\&^\s*[a-z].\{-}=<CR>
-" autocmd FileType haskell nnoremap <buffer> <leader>? :call ale#cursor#ShowCursorDetail()<cr>
-
-function! OpenAllHaskell()
-  args *.hs
-  argdo tabe
-  q
-  tabdo e
-endfunction
-nmap <Leader>hs :call OpenAllHaskell()<CR>
-
-" augroup interoMaps
-"   au!
-"   " Maps for intero. Restrict to Haskell buffers so the bindings don't collide.
-
-"   " Background process and window management
-"   au FileType haskell nnoremap <silent> <leader>is :InteroStart<CR>
-"   au FileType haskell nnoremap <silent> <leader>ik :InteroKill<CR>
-
-"   " Open intero/GHCi split horizontally
-"   au FileType haskell nnoremap <silent> <leader>io :InteroOpen<CR>
-"   " Open intero/GHCi split vertically
-"   au FileType haskell nnoremap <silent> <leader>iov :InteroOpen<CR><C-W>H
-"   au FileType haskell nnoremap <silent> <leader>ih :InteroHide<CR>
-
-"   " Reloading (pick one)
-"   " Automatically reload on save
-"   au BufWritePost *.hs InteroReload
-"   " Manually save and reload
-"   au FileType haskell nnoremap <silent> <leader>wr :w \| :InteroReload<CR>
-
-"   " Load individual modules
-"   au FileType haskell nnoremap <silent> <leader>il :InteroLoadCurrentModule<CR>
-"   au FileType haskell nnoremap <silent> <leader>if :InteroLoadCurrentFile<CR>
-
-"   " Type-related information
-"   " Heads up! These next two differ from the rest.
-"   au FileType haskell map <silent> <leader>t <Plug>InteroGenericType
-"   au FileType haskell map <silent> <leader>T <Plug>InteroType
-"   au FileType haskell nnoremap <silent> <leader>it :InteroTypeInsert<CR>
-
-"   " Navigation
-"   au FileType haskell nnoremap <silent> <leader>jd :InteroGoToDef<CR>
-
-"   " Managing targets
-"   " Prompts you to enter targets (no silent):
-"   au FileType haskell nnoremap <leader>ist :InteroSetTargets<SPACE>
-" augroup END
-
-" " Intero starts automatically. Set this if you'd like to prevent that.
-" let g:intero_start_immediately = 1
-
-" " Enable type information on hover (when holding cursor at point for ~1 second).
-" let g:intero_type_on_hover = 1
-
-" " Change the intero window size; default is 10.
-" let g:intero_window_size = 15
-
-" " Sets the intero window to split vertically; default is horizontal
-" let g:intero_vertical_split = 1
-
-" " OPTIONAL: Make the update time shorter, so the type info will trigger faster.
-" set updatetime=500
-"}}}
-
-" Thesis {{{
-nmap <Space>kw ysiw}i\kw<Esc>
-nmap <Space>ty ysiw}i\ty<Esc>
-nmap <Space>dt ysiw}i\dt<Esc>
-nmap <Space>fn ysiw}i\fn<Esc>
-nmap <Space>bn ysiw}i\bn<Esc>
-nmap <Space>tn i\kw{`\{\{}<Esc>ea\kw{\}\}}<Esc>
-" }}}
-
-" Stylish Haskell {{{
-let g:stylish_haskell_command = "stylish-haskell"
-
-function! g:OverwriteBuffer(output)
-  let winview = winsaveview()
-  silent! undojoin
-  normal! gg"_dG
-  call append(0, split(a:output, '\v\n'))
-  normal! G"_dd
-  call winrestview(winview)
-endfunction
-
-function! g:StylishHaskell()
-  if executable(g:stylish_haskell_command)
-    call g:RunStylishHaskell()
-  elseif !exists("s:exec_warned")
-    let s:exec_warned = 1
-    echom "stylish-haskell executable not found"
-  endif
-endfunction
-
-function! g:RunStylishHaskell()
-  let output = system(g:stylish_haskell_command . " " . bufname("%"))
-  let errors = matchstr(output, '\(Language\.Haskell\.Stylish\.Parse\.parseModule:[^\x0]*\)')
-  if v:shell_error != 0
-    echom output
-  elseif empty(errors)
-    call OverwriteBuffer(output)
-    write
-  else
-    echom errors
-  endif
-endfunction
-
-nmap <Leader>sh :call g:StylishHaskell()<CR>
-" }}}
-
 " Typos {{{
 command WQ wq
 command Wq wq
 command W w
 command Q q
 map Q <Nop>
-" }}}
-
-" Coq {{{
-" Maps Coquille commands to CoqIDE default key bindings
-" autocmd FileType coq CoqLaunch
-" autocmd Filetype coq call SetCoqOptions()
-" function SetCoqOptions()
-"   CoqLaunch
-
-"   map <buffer> <silent> <Space><Left>    :CoqUndo<CR>
-"   map <buffer> <silent> <Space><Right>  :CoqNext<CR>
-"   map <buffer> <silent> <Space><Enter> :CoqToCursor<CR>
-
-"   imap <buffer> <silent> <Space><Left>    <C-\><C-o>:CoqUndo<CR>
-"   imap <buffer> <silent> <Space><Right>  <C-\><C-o>:CoqNext<CR>
-"   imap <buffer> <silent> <Space><Enter> <C-\><C-o>:CoqToCursor<CR>
-
-"   hi CheckedByCoq ctermbg=0 guibg=LightGreen
-"   hi SentToCoq ctermbg=60 guibg=LimeGreen
-"   nmap QQ :bufdo q<CR>
-" endfunction
-" }}}
-
-" Dafny {{{
-
-let g:syntastic_dafny_dafny_args = '-allowGlobals'
-let g:syntastic_mode_map = {
-        \ "mode": "active",
-        \ "passive_filetypes": ["dafny"] }
-" (optional) map save and check current file to <leader>c
-noremap <Leader>c :w<CR>:SyntasticCheck<CR>
-
 " }}}
 
 " Rust {{{
@@ -597,6 +434,12 @@ hi virtualTexthl ctermbg=gray
 hi Todo ctermbg=gray
 hi LanguageClientInfoSign ctermbg=gray
 hi LanguageClientInfo ctermbg=gray
+hi LanguageClientWarningSign ctermbg=208
+hi LanguageClientWarning ctermbg=208
+hi LanguageClientWarning ctermfg=235
+hi LanguageClientError ctermbg=167
+hi LanguageClientErrorSign ctermbg=167
+hi LanguageClientError ctermfg=235
 hi LanguageClientCodeLens ctermbg=208
 hi LanguageClientCodeLens ctermfg=236
 nnoremap <Leader>t :call LanguageClient#textDocument_hover()<CR>
