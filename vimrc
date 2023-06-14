@@ -6,20 +6,8 @@ call vundle#begin()
 Plugin 'gmarik/vundle'
 
 nmap <Leader>op :PluginInstall<CR>
-Plugin 'autozimu/LanguageClient-neovim', {
-    \ 'branch': 'next',
-    \ 'do': 'bash install.sh',
-    \ }
-Plugin 'zerowidth/vim-copy-as-rtf'
-Plugin 'psosera/ott-vim'
-Plugin 'jez/vim-better-sml'
-Plugin 'gibiansky/vim-latex-objects'
-Plugin 'gdetrez/vim-gf'
 Plugin 'junegunn/rainbow_parentheses.vim'
-Plugin 'wlangstroth/vim-racket'
 Plugin 'jeffkreeftmeijer/vim-numbertoggle'
-Plugin 'joom/turkish-deasciifier.vim'
-Plugin 'joom/latex-unicoder.vim'
 Plugin 'tpope/vim-fugitive'
 Plugin 'tpope/vim-repeat'
 Plugin 'tikhomirov/vim-glsl'
@@ -28,9 +16,6 @@ Plugin 'airblade/vim-gitgutter'
 Plugin 'terryma/vim-multiple-cursors'
 Plugin 'joom/vim-commentary'
 Plugin 'vim-scripts/Align'
-Plugin 'gregsexton/MatchTag'
-Plugin 'MarcWeber/vim-addon-mw-utils'
-Plugin 'tomtom/tlib_vim'
 Plugin 'honza/vim-snippets'
 Plugin 'vim-scripts/Gundo'
 Plugin 'jiangmiao/auto-pairs'
@@ -40,32 +25,10 @@ Plugin 'ctrlpvim/ctrlp.vim'
 Plugin 'ervandew/supertab'
 Plugin 'ConradIrwin/vim-bracketed-paste'
 " Plugin 'Yggdroot/indentLine'
-Plugin 'rust-lang/rust.vim'
 Plugin 'tpope/vim-dispatch'
-
-"Front End
-Plugin 'pangloss/vim-javascript'
-Plugin 'leafgarland/typescript-vim'
-Plugin 'kchmck/vim-coffee-script'
-Plugin 'ap/vim-css-color'
-Plugin 'miripiruni/CSScomb-for-Vim'
-
-"Haskell
-Plugin 'lambdatoast/elm.vim'
-Plugin 'raichoo/purescript-vim'
-Plugin 'idris-hackers/idris-vim'
-Plugin 'vmchale/ipkg-vim'
-Plugin 'vim-scripts/coq-syntax'
-Plugin 'travitch/hasksyn'
-Plugin 'scrooloose/syntastic'
-Plugin 'Twinside/vim-syntax-haskell-cabal'
-Plugin 'imeckler/mote'
-Plugin 'ndmitchell/ghcid', { 'rtp': 'plugins/nvim' }
 
 Plugin 'godlygeek/csapprox'
 "Color Schemes
-Plugin 'gummesson/stereokai.vim'
-Plugin 'vim-scripts/wombat256.vim'
 
 Plugin 'moll/vim-bbye'
 call vundle#end()            " required
