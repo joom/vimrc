@@ -28,6 +28,8 @@ Plugin 'ConradIrwin/vim-bracketed-paste'
 Plugin 'tpope/vim-dispatch'
 
 Plugin 'godlygeek/csapprox'
+Plugin 'vim-scripts/coq-syntax'
+
 "Color Schemes
 
 Plugin 'moll/vim-bbye'
