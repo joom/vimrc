@@ -33,7 +33,9 @@ endfunction
 
 function! s:RefreshTab()
     set tabline=%!TabCaptionLineFunction()
-  set guitablabel=%{TabGuiCaptionLabel()}
+    if exists("+guitablabel")
+        set guitablabel=%{TabGuiCaptionLabel()}
+    endif
 endfunction
 
 function! TabCaptionLabel(number)

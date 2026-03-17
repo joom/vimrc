@@ -6,10 +6,15 @@ call vundle#begin()
 Plugin 'gmarik/vundle'
 
 nmap <Leader>op :PluginInstall<CR>
-Plugin 'autozimu/LanguageClient-neovim', {
-    \ 'branch': 'next',
-    \ 'do': 'bash install.sh',
-    \ }
+" if has('python3')
+"   Plugin 'CoderCookE/vim-chatgpt'
+"   let g:chat_gpt_split_direction = 'vertical'
+" endif
+" Plugin 'autozimu/LanguageClient-neovim', {
+"     \ 'branch': 'next',
+"     \ 'do': 'bash install.sh',
+"     \ }
+Plugin 'prabirshrestha/vim-lsp'
 Plugin 'zerowidth/vim-copy-as-rtf'
 Plugin 'psosera/ott-vim'
 Plugin 'jez/vim-better-sml'
@@ -22,7 +27,7 @@ Plugin 'wlangstroth/vim-racket'
 Plugin 'let-def/vimbufsync'
 " Plugin 'the-lambda-church/coquille'
 
-Plugin 'jeffkreeftmeijer/vim-numbertoggle'
+" Plugin 'jeffkreeftmeijer/vim-numbertoggle'
 Plugin 'joom/turkish-deasciifier.vim'
 Plugin 'joom/latex-unicoder.vim'
 Plugin 'tpope/vim-fugitive'
@@ -64,6 +69,7 @@ Plugin 'miripiruni/CSScomb-for-Vim'
 
 "Haskell
 " Plugin 'parsonsmatt/intero-neovim'
+Plugin 'neovimhaskell/haskell-vim'
 Plugin 'lambdatoast/elm.vim'
 Plugin 'raichoo/purescript-vim'
 Plugin 'idris-hackers/idris-vim'
@@ -71,15 +77,15 @@ Plugin 'vmchale/ipkg-vim'
 Plugin 'vim-scripts/coq-syntax'
 " Plugin 'Shougo/vimproc.vim'
 " Plugin 'w0rp/ale'
-Plugin 'travitch/hasksyn'
-Plugin 'scrooloose/syntastic'
+" Plugin 'travitch/hasksyn'
+" Plugin 'scrooloose/syntastic'
 " Plugin 'mlr-msft/vim-loves-dafny'
 " Plugin 'lukerandall/haskellmode-vim'
 " Plugin 'eagletmt/ghcmod-vim'
 Plugin 'Twinside/vim-syntax-haskell-cabal'
 " Plugin 'derekelkins/agda-vim'
-Plugin 'imeckler/mote'
-Plugin 'ndmitchell/ghcid', { 'rtp': 'plugins/nvim' }
+" Plugin 'imeckler/mote'
+" Plugin 'ndmitchell/ghcid', { 'rtp': 'plugins/nvim' }
 
 Plugin 'godlygeek/csapprox'
 "Color Schemes
@@ -137,7 +143,6 @@ Plugin 'scrooloose/nerdtree'
 let g:NERDTreeMapChangeRoot =  "`"
 
 nmap <Leader>] :NERDTreeTabsToggle<CR>
-nnoremap <Space>c :NERDTreeCWD<CR>
 let NERDTreeMinimalUI=1
 let NERDTreeDirArrows=0
 let NERDTreeQuitOnOpen = 1
@@ -189,7 +194,6 @@ vnoremap k gk
 colorscheme gruvbox
 
 set nocompatible
-filetype off
 " set autochdir
 set foldmethod=marker
 set linebreak
@@ -207,6 +211,8 @@ imap <MiddleMouse> <Nop>
 imap <2-MiddleMouse> <Nop>
 imap <3-MiddleMouse> <Nop>
 imap <4-MiddleMouse> <Nop>
+" set updatetime=500
+" autocmd CursorHold * silent! LspHover
 
 filetype plugin indent on
 
@@ -232,7 +238,7 @@ set history=1000
 set undolevels=1000
 set noswapfile
 set nobackup
-set number
+" set number
 set linespace=3
 set backspace=indent,eol,start
 
@@ -335,6 +341,7 @@ nmap <Leader>w :w<CR>
 nmap <Leader>q :q<CR>
 nmap <Leader>wq :wq<CR>
 nmap <Leader>1q :q!<CR>
+nmap <Leader>qa :qa!<CR>
 map <Space>h <Esc>gT
 map <Space>l <Esc>gt
 nmap tg gT
@@ -349,7 +356,12 @@ nmap <F5> :source ~/.vimrc<CR>
 nmap <Leader>n :tabnew<CR>
 
 "Paste mode toggle
-set pastetoggle=<F5><F5>
+if exists("+pastetoggle")
+  set pastetoggle=<F5><F5>
+else
+  nnoremap <F5><F5> :set invpaste paste?<CR>
+  inoremap <F5><F5> <C-o>:set invpaste paste?<CR>
+endif
 
 "Keep selection after indent
 vnoremap > ><CR>gv
@@ -429,7 +441,7 @@ nmap <Enter><Enter> :w<CR>
 vmap <Enter><Enter> :w<CR>
 nnoremap <BS> <C-w>w
 nmap <Space>] :NERDTreeTabsToggle<CR>
-nmap <Space>rst :NERDTreeTabsToggle<CR>:NERDTreeTabsToggle<CR>
+nmap <Space>rst :NERDTreeTabsToggle<CR>
 " }}}
 
 " Haskell & Idris {{{
@@ -500,11 +512,12 @@ nmap <Leader>hs :call OpenAllHaskell()<CR>
 "}}}
 
 " Thesis {{{
-nmap <Space>kw ysiw}i\kw<Esc>
-nmap <Space>ty ysiw}i\ty<Esc>
-nmap <Space>dt ysiw}i\dt<Esc>
-nmap <Space>fn ysiw}i\fn<Esc>
-nmap <Space>bn ysiw}i\bn<Esc>
+nmap <Space>kw ysiw}i\kw<Esc>4w
+nmap <Space>ty ysiw}i\ty<Esc>4w
+nmap <Space>dt ysiw}i\dt<Esc>4w
+nmap <Space>fn ysiw}i\fn<Esc>4w
+nmap <Space>bn ysiw}i\bn<Esc>4w
+nmap <Space>tc ysiw}i\tc<Esc>4w
 nmap <Space>tn i\kw{`\{\{}<Esc>ea\kw{\}\}}<Esc>
 " }}}
 
@@ -574,19 +587,31 @@ map Q <Nop>
 " endfunction
 " }}}
 
-" Dafny {{{
-
-let g:syntastic_dafny_dafny_args = '-allowGlobals'
-let g:syntastic_mode_map = {
-        \ "mode": "active",
-        \ "passive_filetypes": ["dafny"] }
-" (optional) map save and check current file to <leader>c
-noremap <Leader>c :w<CR>:SyntasticCheck<CR>
-
-" }}}
-
 " Rust {{{
 let g:LanguageClient_serverCommands = {
 \ 'rust': ['rust-analyzer'],
+\ 'haskell': ['haskell-language-server-wrapper'],
+\ 'python': ['/usr/local/bin/ruff-lsp'],
 \ }
+let g:LanguageClient_useVirtualText = "All"
+" let g:LanguageClient_useVirtualText = "Diagnostics"
+" hi virtualTexthl ctermbg=gray
+" hi Todo ctermbg=gray
+" hi LanguageClientInfoSign ctermbg=gray
+" hi LanguageClientInfo ctermbg=gray
+" hi LanguageClientCodeLens ctermbg=208
+" hi LanguageClientCodeLens ctermfg=236
+nnoremap <Leader>t :call LanguageClient#textDocument_hover()<CR>
+nnoremap <Leader>d :call LanguageClient#textDocument_definition()<CR>
+nnoremap <Leader>h :call LanguageClient#handleCodeLensAction()<CR>
+nnoremap <Leader>ft :call LanguageClient#textDocument_formatting()<CR>
+let g:indentLine_char_list = ['|', '¦', '┆', '┊']
+
+let g:LanguageClient_diagnosticsDisplay = {1: {"name": "Error","texthl": "ALEError","signText": ">>","signTexthl": "ALEErrorSign",},2: {"name": "Warning","texthl": "ALEWarning","signText": ">>","signTexthl": "ALEWarningSign",},3: {"name": "Information","texthl": "ALEInfo","signText": ">>","signTexthl": "ALEInfoSign",},4: {"name": "Hint","texthl": "ALEInfo","signText": ">>","signTexthl": "ALEInfoSign",},}
+set signcolumn=yes
+" }}}
+
+" LSP {{{
+nnoremap K :LspHover<CR>
+nnoremap gD :LspDefinition<CR>
 " }}}
